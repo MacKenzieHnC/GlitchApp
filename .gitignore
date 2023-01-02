@@ -36,7 +36,7 @@ local.properties
 #
 node_modules/**
 !node_modules/**/
-node_modules/react-native/
+node_modules/react-native
 !node_modules/react-native-sqlite-storage/platforms/windows/SqlitePlugin/SqlitePlugin.cpp
 !node_modules/react-native-sqlite-storage/platforms/windows/SqlitePlugin/SqlitePlugin.h
 npm-debug.log
