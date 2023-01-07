@@ -67,3 +67,26 @@ export const getCharacters = async () => {
     db.close();
   }
 };
+
+export const saveCharacter = async (id: number, changes: any) => {
+  const db = await getDBConnection();
+
+  var changeStr = ``;
+  Object.keys(changes).forEach(
+    key => (changeStr += `${key} = ${changes[key]}, `),
+  );
+  changeStr = changeStr.slice(0, changeStr.length - 2);
+
+  try {
+    const query = `UPDATE Characters
+    SET ${changeStr}
+    WHERE id = ${id};`;
+
+    await db.executeSql(query);
+  } catch (error) {
+    console.error(error);
+    throw Error('Failed to set character !!!');
+  } finally {
+    db.close();
+  }
+};

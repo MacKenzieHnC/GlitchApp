@@ -1,24 +1,52 @@
 import React, {useState} from 'react';
-import {Button, Text, View} from 'react-native';
+import {Alert, Button, Text, View} from 'react-native';
 import {StyleSheet} from 'react-native-windows';
 import {character, costs, flavor, stats} from '../utils/types';
 import Table from './Table';
-import capitalize from '../utils/Capitalize';
 import LoadScreen from './LoadScreen';
+import {capitalize, detectChanges, getPropFromPath} from '../utils/utils';
+import {saveCharacter} from '../utils/db-service';
 
 const Character = ({initial}: {initial: character}) => {
   // Load
   const [chara, setChara] = useState(initial);
+  const [lastSaved, setLastSaved] = useState(initial);
   if (!chara) {
     return <LoadScreen />;
   }
 
+  // Save
+  const onSave = () => {
+    const changes = detectChanges(lastSaved, chara);
+    var alertMessage = 'Save successful';
+    if (changes.length > 0) {
+      var changeList = {}; // Object storing key/value pairs for changes (db is non-nested)
+      changes.forEach(change => {
+        const key = change[change.length - 1];
+        changeList[key] = getPropFromPath(chara, change)[key];
+        alertMessage +=
+          '\n' +
+          key +
+          ': ' +
+          getPropFromPath(lastSaved, change)[key] +
+          ' => ' +
+          getPropFromPath(chara, change)[key];
+      });
+      saveCharacter(chara.key, changeList); // Send changes to db
+      setLastSaved(JSON.parse(JSON.stringify(chara))); // Deep copy / store changes in state
+      Alert.alert(alertMessage);
+    } else {
+      Alert.alert('No changes detected!');
+    }
+  };
+
   // Component
   return (
     <View style={styles.container}>
+      <Button title={'Save'} onPress={onSave} />
       {/* Name */}
-      <Text style={styles.h1}>{initial.name}</Text>
-      <Text style={styles.h2}>Disciplined in {initial.discipline}</Text>
+      <Text style={styles.h1}>{lastSaved.name}</Text>
+      <Text style={styles.h2}>Disciplined in {lastSaved.discipline}</Text>
 
       {/* XP */}
       <View style={{alignItems: 'center', flexDirection: 'row'}}>
