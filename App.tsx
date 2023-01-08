@@ -57,7 +57,7 @@ const App = () => {
   // Component
   return (
     <NavigationContainer>
-      <Drawer.Navigator>
+      <Drawer.Navigator screenOptions={{unmountOnBlur: true}}>
         <Drawer.Screen name="Characters" component={CharactersScreen} />
         <Drawer.Screen name="Details" component={DetailsScreen} />
       </Drawer.Navigator>
