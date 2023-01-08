@@ -6,17 +6,17 @@
  *
  * @format
  */
-
+import 'react-native-gesture-handler';
+import {NavigationContainer} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
-import {SafeAreaView, ScrollView, View} from 'react-native';
-
+import {SafeAreaView, ScrollView, Text, View} from 'react-native';
 import Character from './Components/Character';
 import LoadScreen from './Components/LoadScreen';
-
 import {getCharacters} from './utils/db-service';
 import {character} from './utils/types';
+import {createDrawerNavigator} from '@react-navigation/drawer';
 
-const App = () => {
+function CharactersScreen() {
   // Load characters
   const [characters, setCharacters] = useState<character[]>();
   useEffect(() => {
@@ -30,8 +30,6 @@ const App = () => {
   if (!characters) {
     return <LoadScreen />;
   }
-
-  // Component
   return (
     <SafeAreaView>
       <ScrollView contentInsetAdjustmentBehavior="automatic">
@@ -42,6 +40,28 @@ const App = () => {
         </View>
       </ScrollView>
     </SafeAreaView>
+  );
+}
+
+function DetailsScreen() {
+  return (
+    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+      <Text>Details Screen</Text>
+    </View>
+  );
+}
+
+const Drawer = createDrawerNavigator();
+
+const App = () => {
+  // Component
+  return (
+    <NavigationContainer>
+      <Drawer.Navigator>
+        <Drawer.Screen name="Characters" component={CharactersScreen} />
+        <Drawer.Screen name="Details" component={DetailsScreen} />
+      </Drawer.Navigator>
+    </NavigationContainer>
   );
 };
 
