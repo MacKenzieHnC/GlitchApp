@@ -1,11 +1,13 @@
+import {useTheme} from '@react-navigation/native';
 import React from 'react';
 import {Text, View} from 'react-native';
 import {StyleSheet} from 'react-native-windows';
 
 const LoadScreen = () => {
+  const {colors} = useTheme();
   return (
     <View style={styles.loading}>
-      <Text>Loading...</Text>
+      <Text style={{color: colors.text}}>Loading...</Text>
     </View>
   );
 };

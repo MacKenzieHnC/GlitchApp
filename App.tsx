@@ -7,9 +7,19 @@
  * @format
  */
 import 'react-native-gesture-handler';
-import {NavigationContainer} from '@react-navigation/native';
+import {
+  DarkTheme,
+  DefaultTheme,
+  NavigationContainer,
+} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
-import {SafeAreaView, ScrollView, Text, View} from 'react-native';
+import {
+  SafeAreaView,
+  ScrollView,
+  Text,
+  useColorScheme,
+  View,
+} from 'react-native';
 import Character from './Components/Character';
 import LoadScreen from './Components/LoadScreen';
 import {getCharacters} from './utils/db-service';
@@ -54,9 +64,10 @@ function DetailsScreen() {
 const Drawer = createDrawerNavigator();
 
 const App = () => {
+  const scheme = useColorScheme();
   // Component
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Drawer.Navigator screenOptions={{unmountOnBlur: true}}>
         <Drawer.Screen name="Characters" component={CharactersScreen} />
         <Drawer.Screen name="Details" component={DetailsScreen} />

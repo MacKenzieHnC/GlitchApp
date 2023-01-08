@@ -1,13 +1,15 @@
 import React, {useState} from 'react';
-import {Alert, Button, Text, View} from 'react-native';
+import {Alert, Button, Text, TouchableOpacity, View} from 'react-native';
 import {StyleSheet} from 'react-native-windows';
 import {character, costs, flavor, stats} from '../utils/types';
 import Table from './Table';
 import LoadScreen from './LoadScreen';
 import {capitalize, detectChanges, getPropFromPath} from '../utils/utils';
 import {saveCharacter} from '../utils/db-service';
+import {useTheme} from '@react-navigation/native';
 
 const Character = ({initial}: {initial: character}) => {
+  const {colors} = useTheme();
   // Load
   const [chara, setChara] = useState(initial);
   const [lastSaved, setLastSaved] = useState(initial);
@@ -43,36 +45,48 @@ const Character = ({initial}: {initial: character}) => {
   // Component
   return (
     <View style={styles.container}>
-      <Button title={'Save'} onPress={onSave} />
+      <TouchableOpacity
+        style={{backgroundColor: colors.border}}
+        onPress={onSave}>
+        <Text style={{...styles.button, color: colors.text}}>SAVE</Text>
+      </TouchableOpacity>
       {/* Name */}
-      <Text style={styles.h1}>{lastSaved.name}</Text>
-      <Text style={styles.h2}>Disciplined in {lastSaved.discipline}</Text>
+      <Text style={{...styles.h1, color: colors.text}}>{lastSaved.name}</Text>
+      <Text style={{...styles.h2, color: colors.text}}>
+        Disciplined in {lastSaved.discipline}
+      </Text>
 
       {/* XP */}
       <View style={{alignItems: 'center', flexDirection: 'row'}}>
-        <Button
-          title={'<'}
+        <TouchableOpacity
+          style={{backgroundColor: colors.border}}
           onPress={() =>
             setChara({
               ...chara,
               xp: chara.xp === 0 ? chara.xp : chara.xp - 1,
             })
-          }
-        />
-        <Text style={{padding: 5}}>XP: {chara.xp}</Text>
-        <Button
-          title={'>'}
-          onPress={() => setChara({...chara, xp: chara.xp + 1})}
-        />
+          }>
+          <Text style={{...styles.button, color: colors.text}}>{'<'}</Text>
+        </TouchableOpacity>
+        <Text style={{padding: 5, color: colors.text}}>XP: {chara.xp}</Text>
+        <TouchableOpacity
+          style={{backgroundColor: colors.border}}
+          onPress={() => setChara({...chara, xp: chara.xp + 1})}>
+          <Text style={{...styles.button, color: colors.text}}>{'>'}</Text>
+        </TouchableOpacity>
       </View>
-      <Text style={styles.h3}>Flavor</Text>
+      <Text style={{...styles.h3, color: colors.text}}>Flavor</Text>
       <Table
         priviledge={[true, false]}
         rowStyle={{flexShrink: 1}}
         data={Object.keys(chara.flavor).map(key => ({
-          name: <Text style={styles.listItem}>{capitalize(key)}:</Text>,
+          name: (
+            <Text style={{...styles.listItem, color: colors.text}}>
+              {capitalize(key)}:
+            </Text>
+          ),
           value: (
-            <Text style={styles.listItem}>
+            <Text style={{...styles.listItem, color: colors.text}}>
               {chara.flavor[key as keyof flavor]}
             </Text>
           ),
@@ -80,13 +94,17 @@ const Character = ({initial}: {initial: character}) => {
       />
 
       {/* Stats */}
-      <Text style={styles.h3}>Stats</Text>
+      <Text style={{...styles.h3, color: colors.text}}>Stats</Text>
       <Table
         priviledge={[true, false]}
         data={Object.keys(chara.stats).map(key => ({
-          name: <Text style={styles.listItem}>{capitalize(key)}:</Text>,
+          name: (
+            <Text style={{...styles.listItem, color: colors.text}}>
+              {capitalize(key)}:
+            </Text>
+          ),
           value: (
-            <Text style={styles.numericListItem}>
+            <Text style={{...styles.numericListItem, color: colors.text}}>
               {chara.stats[key as keyof stats]}
             </Text>
           ),
@@ -95,14 +113,14 @@ const Character = ({initial}: {initial: character}) => {
       />
 
       {/* Costs */}
-      <Text style={styles.h3}>Costs</Text>
+      <Text style={{...styles.h3, color: colors.text}}>Costs</Text>
       <Table
-        rowStyle={undefined}
+        rowStyle={{justifyContent: 'center'}}
         priviledge={[true, false]}
         data={Object.keys(chara.costs).map(key => ({
           backButton: (
-            <Button
-              title={'<'}
+            <TouchableOpacity
+              style={{backgroundColor: colors.border}}
               onPress={() =>
                 setChara({
                   ...chara,
@@ -114,18 +132,23 @@ const Character = ({initial}: {initial: character}) => {
                         : chara.costs[key as keyof costs] - 1,
                   },
                 })
-              }
-            />
+              }>
+              <Text style={{...styles.button, color: colors.text}}>{'<'}</Text>
+            </TouchableOpacity>
           ),
-          name: <Text style={styles.listItem}>{capitalize(key)}:</Text>,
+          name: (
+            <Text style={{...styles.listItem, color: colors.text}}>
+              {capitalize(key)}:
+            </Text>
+          ),
           value: (
-            <Text style={styles.numericListItem}>
+            <Text style={{...styles.numericListItem, color: colors.text}}>
               {chara.costs[key as keyof costs]}
             </Text>
           ),
           forwardButton: (
-            <Button
-              title={'>'}
+            <TouchableOpacity
+              style={{backgroundColor: colors.border}}
               onPress={() =>
                 setChara({
                   ...chara,
@@ -137,8 +160,9 @@ const Character = ({initial}: {initial: character}) => {
                         : chara.costs[key as keyof costs] + 1,
                   },
                 })
-              }
-            />
+              }>
+              <Text style={{...styles.button, color: colors.text}}>{'>'}</Text>
+            </TouchableOpacity>
           ),
         }))}
       />
@@ -186,6 +210,11 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     justifyContent: 'center',
     flex: 1,
+  },
+  button: {
+    paddingHorizontal: 10,
+    fontSize: 20,
+    textAlign: 'center',
   },
 });
 
