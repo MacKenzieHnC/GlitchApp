@@ -18,7 +18,7 @@ const Character = ({initial}: {initial: character}) => {
   // Save
   const onSave = () => {
     const changes = detectChanges(lastSaved, chara);
-    var alertMessage = 'Save successful';
+    var alertMessage = '';
     if (changes.length > 0) {
       var changeList = {}; // Object storing key/value pairs for changes (db is non-nested)
       changes.forEach(change => {
@@ -34,7 +34,7 @@ const Character = ({initial}: {initial: character}) => {
       });
       saveCharacter(chara.key, changeList); // Send changes to db
       setLastSaved(JSON.parse(JSON.stringify(chara))); // Deep copy / store changes in state
-      Alert.alert(alertMessage);
+      Alert.alert('Save successful', alertMessage);
     } else {
       Alert.alert('No changes detected!');
     }
