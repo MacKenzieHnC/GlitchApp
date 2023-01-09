@@ -13,11 +13,15 @@ import {
   DefaultTheme,
   NavigationContainer,
 } from '@react-navigation/native';
-import {createDrawerNavigator} from '@react-navigation/drawer';
+import {
+  createDrawerNavigator,
+  DrawerContentScrollView,
+} from '@react-navigation/drawer';
 
 // React
 import React, {useEffect, useState} from 'react';
 import {
+  Platform,
   SafeAreaView,
   ScrollView,
   Text,
@@ -34,6 +38,7 @@ import Character from './Components/Character';
 import LoadScreen from './Components/LoadScreen';
 import {getCharacters} from './utils/db-service';
 import {character} from './utils/types';
+import {Button, IconButton} from 'react-native-paper';
 
 function CharactersScreen() {
   // Load characters
@@ -72,14 +77,29 @@ function DetailsScreen() {
 
 const Drawer = createDrawerNavigator();
 
+function DrawerContent(props) {
+  return (
+    <DrawerContentScrollView {...props}>
+      {Platform.OS !== 'ios' && Platform.OS !== 'android' && (
+        <IconButton
+          icon={'close'}
+          style={{alignSelf: 'flex-end'}}
+          onPress={() => props.navigation.closeDrawer()}
+        />
+      )}
+    </DrawerContentScrollView>
+  );
+}
+
 const App = () => {
   const scheme = useColorScheme();
   // Component
   return (
-    <NavigationContainer theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Drawer.Navigator screenOptions={{unmountOnBlur: true}}>
+    <NavigationContainer theme={DarkTheme}>
+      <Drawer.Navigator
+        drawerContent={props => <DrawerContent {...props} />}
+        screenOptions={{unmountOnBlur: true}}>
         <Drawer.Screen name="Characters" component={CharactersScreen} />
-        <Drawer.Screen name="Details" component={DetailsScreen} />
       </Drawer.Navigator>
     </NavigationContainer>
   );
