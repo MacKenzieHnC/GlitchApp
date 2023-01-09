@@ -6,12 +6,16 @@
  *
  * @format
  */
-import 'react-native-gesture-handler';
+// Navigation
+import 'react-native-gesture-handler'; // MUST BE FIRST
 import {
   DarkTheme,
   DefaultTheme,
   NavigationContainer,
 } from '@react-navigation/native';
+import {createDrawerNavigator} from '@react-navigation/drawer';
+
+// React
 import React, {useEffect, useState} from 'react';
 import {
   SafeAreaView,
@@ -20,11 +24,16 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
+
+// Redux
+import {Provider} from 'react-redux';
+import {store} from './utils/store';
+
+// My stuff
 import Character from './Components/Character';
 import LoadScreen from './Components/LoadScreen';
 import {getCharacters} from './utils/db-service';
 import {character} from './utils/types';
-import {createDrawerNavigator} from '@react-navigation/drawer';
 
 function CharactersScreen() {
   // Load characters
@@ -76,4 +85,12 @@ const App = () => {
   );
 };
 
-export default App;
+const AppWrapper = () => {
+  return (
+    <Provider store={store}>
+      <App />
+    </Provider>
+  );
+};
+
+export default AppWrapper;
