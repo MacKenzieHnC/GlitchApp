@@ -6,9 +6,9 @@ import Table from './Table';
 import LoadScreen from './LoadScreen';
 import {capitalize, detectChanges, getPropFromPath} from '../utils/utils';
 import {saveCharacter} from '../utils/db-service';
-import {useTheme} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import {getPreferences} from '../utils/store/appSlice';
+import {useTheme} from 'react-native-paper';
 
 const Character = ({initial}: {initial: character}) => {
   const {colors} = useTheme();
@@ -49,50 +49,52 @@ const Character = ({initial}: {initial: character}) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        style={{backgroundColor: colors.border}}
+        style={{backgroundColor: colors.outline}}
         onPress={onSave}>
-        <Text style={{...styles.button, color: colors.text}}>SAVE</Text>
+        <Text style={{...styles.button, color: colors.primary}}>SAVE</Text>
       </TouchableOpacity>
       {/* Name */}
-      <Text style={{...styles.h1, color: colors.text}}>{lastSaved.name}</Text>
-      <Text style={{...styles.h2, color: colors.text}}>
+      <Text style={{...styles.h1, color: colors.primary}}>
+        {lastSaved.name}
+      </Text>
+      <Text style={{...styles.h2, color: colors.primary}}>
         Disciplined in {lastSaved.discipline}
       </Text>
 
       {/* XP */}
       <View style={{alignItems: 'center', flexDirection: 'row'}}>
         <TouchableOpacity
-          style={{backgroundColor: colors.border}}
+          style={{backgroundColor: colors.outline}}
           onPress={() =>
             setChara({
               ...chara,
               xp: chara.xp === 0 ? chara.xp : chara.xp - 1,
             })
           }>
-          <Text style={{...styles.button, color: colors.text}}>{'<'}</Text>
+          <Text style={{...styles.button, color: colors.primary}}>{'<'}</Text>
         </TouchableOpacity>
-        <Text style={{padding: 5, color: colors.text}}>XP: {chara.xp}</Text>
+        <Text style={{padding: 5, color: colors.primary}}>XP: {chara.xp}</Text>
         <TouchableOpacity
-          style={{backgroundColor: colors.border}}
+          style={{backgroundColor: colors.outline}}
           onPress={() => setChara({...chara, xp: chara.xp + 1})}>
-          <Text style={{...styles.button, color: colors.text}}>{'>'}</Text>
+          <Text style={{...styles.button, color: colors.primary}}>{'>'}</Text>
         </TouchableOpacity>
       </View>
 
       {preferences.flavor && (
         <View style={styles.container}>
-          <Text style={{...styles.h3, color: colors.text}}>Flavor</Text>
+          <Text style={{...styles.h3, color: colors.primary}}>Flavor</Text>
           <Table
             priviledge={[true, false]}
             rowStyle={{flexShrink: 1}}
             data={Object.keys(chara.flavor).map(key => ({
               name: (
-                <Text style={{...styles.listItem, color: colors.text}}>
+                <Text style={{...styles.listItem, color: colors.primary}}>
                   {capitalize(key)}:
                 </Text>
               ),
               value: (
-                <Text style={{...styles.listItem, color: colors.text}}>
+                <Text style={{...styles.listItem, color: colors.primary}}>
                   {chara.flavor[key as keyof flavor]}
                 </Text>
               ),
@@ -105,17 +107,18 @@ const Character = ({initial}: {initial: character}) => {
 
       {preferences.stats && (
         <View style={styles.container}>
-          <Text style={{...styles.h3, color: colors.text}}>Stats</Text>
+          <Text style={{...styles.h3, color: colors.primary}}>Stats</Text>
           <Table
             priviledge={[true, false]}
             data={Object.keys(chara.stats).map(key => ({
               name: (
-                <Text style={{...styles.listItem, color: colors.text}}>
+                <Text style={{...styles.listItem, color: colors.primary}}>
                   {capitalize(key)}:
                 </Text>
               ),
               value: (
-                <Text style={{...styles.numericListItem, color: colors.text}}>
+                <Text
+                  style={{...styles.numericListItem, color: colors.primary}}>
                   {chara.stats[key as keyof stats]}
                 </Text>
               ),
@@ -128,14 +131,14 @@ const Character = ({initial}: {initial: character}) => {
       {/* Costs */}
       {preferences.costs && (
         <View style={styles.container}>
-          <Text style={{...styles.h3, color: colors.text}}>Costs</Text>
+          <Text style={{...styles.h3, color: colors.primary}}>Costs</Text>
           <Table
             rowStyle={{justifyContent: 'center'}}
             priviledge={[true, false]}
             data={Object.keys(chara.costs).map(key => ({
               backButton: (
                 <TouchableOpacity
-                  style={{backgroundColor: colors.border}}
+                  style={{backgroundColor: colors.outline}}
                   onPress={() =>
                     setChara({
                       ...chara,
@@ -148,24 +151,25 @@ const Character = ({initial}: {initial: character}) => {
                       },
                     })
                   }>
-                  <Text style={{...styles.button, color: colors.text}}>
+                  <Text style={{...styles.button, color: colors.primary}}>
                     {'<'}
                   </Text>
                 </TouchableOpacity>
               ),
               name: (
-                <Text style={{...styles.listItem, color: colors.text}}>
+                <Text style={{...styles.listItem, color: colors.primary}}>
                   {capitalize(key)}:
                 </Text>
               ),
               value: (
-                <Text style={{...styles.numericListItem, color: colors.text}}>
+                <Text
+                  style={{...styles.numericListItem, color: colors.primary}}>
                   {chara.costs[key as keyof costs]}
                 </Text>
               ),
               forwardButton: (
                 <TouchableOpacity
-                  style={{backgroundColor: colors.border}}
+                  style={{backgroundColor: colors.outline}}
                   onPress={() =>
                     setChara({
                       ...chara,
@@ -178,7 +182,7 @@ const Character = ({initial}: {initial: character}) => {
                       },
                     })
                   }>
-                  <Text style={{...styles.button, color: colors.text}}>
+                  <Text style={{...styles.button, color: colors.primary}}>
                     {'>'}
                   </Text>
                 </TouchableOpacity>

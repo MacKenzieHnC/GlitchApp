@@ -6,41 +6,25 @@
  *
  * @format
  */
-// Navigation
-import 'react-native-gesture-handler'; // MUST BE FIRST
-import {
-  DarkTheme,
-  DefaultTheme,
-  NavigationContainer,
-} from '@react-navigation/native';
-import {
-  createDrawerNavigator,
-  DrawerContentScrollView,
-} from '@react-navigation/drawer';
 
 // React
 import React, {useEffect, useState} from 'react';
-import {
-  Platform,
-  SafeAreaView,
-  ScrollView,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+import {SafeAreaView, ScrollView, View} from 'react-native';
 
 // Redux
 import {Provider} from 'react-redux';
 import {store} from './utils/store';
+
+// Paper
+import {Provider as PaperProvider} from 'react-native-paper';
 
 // My stuff
 import Character from './Components/Character';
 import LoadScreen from './Components/LoadScreen';
 import {getCharacters} from './utils/db-service';
 import {character} from './utils/types';
-import {Button, IconButton} from 'react-native-paper';
 
-function CharactersScreen() {
+const App = () => {
   // Load characters
   const [characters, setCharacters] = useState<character[]>();
   useEffect(() => {
@@ -54,6 +38,8 @@ function CharactersScreen() {
   if (!characters) {
     return <LoadScreen />;
   }
+
+  // Component
   return (
     <SafeAreaView>
       <ScrollView contentInsetAdjustmentBehavior="automatic">
@@ -65,51 +51,15 @@ function CharactersScreen() {
       </ScrollView>
     </SafeAreaView>
   );
-}
-
-function DetailsScreen() {
-  return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-      <Text>Details Screen</Text>
-    </View>
-  );
-}
-
-const Drawer = createDrawerNavigator();
-
-function DrawerContent(props) {
-  return (
-    <DrawerContentScrollView {...props}>
-      {Platform.OS !== 'ios' && Platform.OS !== 'android' && (
-        <IconButton
-          icon={'close'}
-          style={{alignSelf: 'flex-end'}}
-          onPress={() => props.navigation.closeDrawer()}
-        />
-      )}
-    </DrawerContentScrollView>
-  );
-}
-
-const App = () => {
-  const scheme = useColorScheme();
-  // Component
-  return (
-    <NavigationContainer theme={DarkTheme}>
-      <Drawer.Navigator
-        drawerContent={props => <DrawerContent {...props} />}
-        screenOptions={{unmountOnBlur: true}}>
-        <Drawer.Screen name="Characters" component={CharactersScreen} />
-      </Drawer.Navigator>
-    </NavigationContainer>
-  );
 };
 
 const AppWrapper = () => {
   return (
-    <Provider store={store}>
-      <App />
-    </Provider>
+    <PaperProvider>
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </PaperProvider>
   );
 };
 

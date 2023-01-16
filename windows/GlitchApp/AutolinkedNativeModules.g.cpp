@@ -3,9 +3,6 @@
 #include "pch.h"
 #include "AutolinkedNativeModules.g.h"
 
-// Includes from react-native-screens
-#include <winrt/RNScreens.h>
-
 // Includes from react-native-sqlite-storage
 #include <winrt/SQLitePlugin.h>
 
@@ -14,8 +11,6 @@ namespace winrt::Microsoft::ReactNative
 
 void RegisterAutolinkedNativeModulePackages(winrt::Windows::Foundation::Collections::IVector<winrt::Microsoft::ReactNative::IReactPackageProvider> const& packageProviders)
 { 
-    // IReactPackageProviders from react-native-screens
-    packageProviders.Append(winrt::RNScreens::ReactPackageProvider());
     // IReactPackageProviders from react-native-sqlite-storage
     packageProviders.Append(winrt::SQLitePlugin::ReactPackageProvider());
 }
