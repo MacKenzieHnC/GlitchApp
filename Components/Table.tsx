@@ -5,16 +5,18 @@
     it's just on second rotation? Idk yet)
 */
 import React, {useState} from 'react';
-import {LayoutChangeEvent, useWindowDimensions, View} from 'react-native';
+import {LayoutChangeEvent, Text, useWindowDimensions, View} from 'react-native';
 
 const Table = ({
   data,
   rowStyle = undefined,
   priviledge = new Array(data.length).fill(false),
+  padding = 0,
 }: {
   data: any[];
-  rowStyle: Object | undefined;
-  priviledge: boolean[];
+  rowStyle?: Object | undefined;
+  priviledge?: boolean[];
+  padding?: number;
 }) => {
   // Initialize list of widths
   const [colWidth, setColWidth] = useState<number[][]>(
@@ -22,9 +24,9 @@ const Table = ({
   );
 
   // Get widows size
-  const maxSize = useWindowDimensions();
+  const maxWidth = useWindowDimensions().width - padding;
 
-  if (!colWidth || !maxSize) {
+  if (!colWidth || !maxWidth) {
     return <></>;
   }
 
@@ -41,8 +43,8 @@ const Table = ({
       width;
 
     // Shrink unpriviledged components
-    if (!priviledge[col] && sum > maxSize.width) {
-      width = width - (sum - maxSize.width);
+    if (!priviledge[col] && sum > maxWidth) {
+      width = width - (sum - maxWidth);
       if (width < 0) {
         width = 0;
       }
@@ -61,7 +63,7 @@ const Table = ({
           key={rowIndex}
           style={{
             flexDirection: 'row',
-            maxWidth: maxSize.width,
+            maxWidth: maxWidth,
           }}>
           {/* Map along columns */}
           {Object.keys(item).map((key, colIndex) => (
@@ -71,8 +73,9 @@ const Table = ({
                 onLayout(event, rowIndex, colIndex);
               }}
               style={{
-                minWidth: Math.max(...colWidth.map(row => row[colIndex])),
-                flexShrink: 1,
+                minWidth:
+                  Math.max(...colWidth.map(row => row[colIndex])) +
+                  (priviledge[colIndex] ? 0 : -1),
                 ...rowStyle,
               }}>
               {item[key]}
