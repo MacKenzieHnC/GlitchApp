@@ -7,14 +7,8 @@ export interface character {
   flavor: flavor;
   stats: stats;
   costs: costs;
-
-  // bonds: string[];
-  // geasa: string;
-  // gifts: gift[];
-  // treasures: string[];
-  // arcana: string[];
-
-  // levers: string[];
+  housekeeping: housekeeping;
+  gifts: gift[];
 }
 
 export interface flavor {
@@ -38,4 +32,25 @@ export interface costs {
   fugue: number;
   burn: number;
   wear: number;
+}
+
+export interface housekeeping {
+  bonds: string[];
+  geasa: string[];
+  treasures: string[];
+  arcana: string[];
+  levers: string[];
+}
+
+export interface gift {
+  key: number;
+  name: string;
+  pg: number;
+  description: string;
+  cost: number;
+  activation: string;
+  aoe: string;
+  flexibility: string;
+  common: boolean;
+  cps: number;
 }

@@ -16,7 +16,7 @@ import {Provider} from 'react-redux';
 import {store} from './utils/store';
 
 // Paper
-import {Provider as PaperProvider} from 'react-native-paper';
+import {Provider as PaperProvider, useTheme} from 'react-native-paper';
 
 // My stuff
 import Character from './Components/Character';
@@ -25,6 +25,8 @@ import {getCharacters} from './utils/db-service';
 import {character} from './utils/types';
 
 const App = () => {
+  const {colors} = useTheme();
+
   // Load characters
   const [characters, setCharacters] = useState<character[]>();
   useEffect(() => {
@@ -41,7 +43,7 @@ const App = () => {
 
   // Component
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{backgroundColor: colors.background}}>
       <ScrollView contentInsetAdjustmentBehavior="automatic">
         <View>
           {characters.map(c => (

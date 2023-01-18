@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {Alert, Text, TouchableOpacity, View} from 'react-native';
 import {StyleSheet} from 'react-native-windows';
-import {character, costs, flavor, stats} from '../utils/types';
+import {character, costs, flavor, housekeeping, stats} from '../utils/types';
 import Table from './Table';
 import LoadScreen from './LoadScreen';
 import {capitalize, detectChanges, getPropFromPath} from '../utils/utils';
@@ -9,6 +9,7 @@ import {saveCharacter} from '../utils/db-service';
 import {useSelector} from 'react-redux';
 import {getPreferences} from '../utils/store/appSlice';
 import {useTheme} from 'react-native-paper';
+import Gift from './Gift';
 
 const Character = ({initial}: {initial: character}) => {
   const {colors} = useTheme();
@@ -44,6 +45,36 @@ const Character = ({initial}: {initial: character}) => {
       Alert.alert('No changes detected!');
     }
   };
+
+  const flavorData = Object.keys(chara.flavor)
+    .map(key => ({
+      name: (
+        <Text style={{...styles.listItem, color: colors.primary}}>
+          {capitalize(key)}:
+        </Text>
+      ),
+      value: (
+        <Text style={{...styles.listItem, color: colors.primary}}>
+          {chara.flavor[key as keyof flavor]}
+        </Text>
+      ),
+    }))
+    .concat(
+      Object.keys(chara.housekeeping)
+        .filter(x => chara.housekeeping[x as keyof housekeeping].length > 0)
+        .map(key => ({
+          name: (
+            <Text style={{...styles.listItem, color: colors.primary}}>
+              {capitalize(key)}:
+            </Text>
+          ),
+          value: (
+            <Text style={{...styles.listItem, color: colors.primary}}>
+              {chara.housekeeping[key as keyof housekeeping].join('\n')}
+            </Text>
+          ),
+        })),
+    );
 
   // Component
   return (
@@ -87,24 +118,22 @@ const Character = ({initial}: {initial: character}) => {
           <Table
             priviledge={[true, false]}
             rowStyle={{flexShrink: 1}}
-            data={Object.keys(chara.flavor).map(key => ({
-              name: (
-                <Text style={{...styles.listItem, color: colors.primary}}>
-                  {capitalize(key)}:
-                </Text>
-              ),
-              value: (
-                <Text style={{...styles.listItem, color: colors.primary}}>
-                  {chara.flavor[key as keyof flavor]}
-                </Text>
-              ),
-            }))}
+            data={flavorData}
           />
         </View>
       )}
 
-      {/* Stats */}
+      {/* Gifts */}
+      {chara.gifts.length > 0 && (
+        <View style={styles.container}>
+          <Text style={{...styles.h3, color: colors.primary}}>Gifts</Text>
+          {chara.gifts.map(gift => (
+            <Gift item={gift} />
+          ))}
+        </View>
+      )}
 
+      {/* Stats */}
       {preferences.stats && (
         <View style={styles.container}>
           <Text style={{...styles.h3, color: colors.primary}}>Stats</Text>
@@ -200,6 +229,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignContent: 'center',
     justifyContent: 'center',
+    padding: 20,
     flex: 1,
   },
   flavor: {},
