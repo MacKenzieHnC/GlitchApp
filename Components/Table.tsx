@@ -5,7 +5,7 @@
     it's just on second rotation? Idk yet)
 */
 import React, {useState} from 'react';
-import {LayoutChangeEvent, Text, useWindowDimensions, View} from 'react-native';
+import {LayoutChangeEvent, useWindowDimensions, View} from 'react-native';
 
 const Table = ({
   data,
