@@ -10,6 +10,7 @@ import {useSelector} from 'react-redux';
 import {getPreferences} from '../utils/store/appSlice';
 import {useTheme} from 'react-native-paper';
 import Gift from './Gift';
+import ActiveQuest from './ActiveQuest';
 
 const Character = ({initial}: {initial: character}) => {
   const {colors} = useTheme();
@@ -220,6 +221,17 @@ const Character = ({initial}: {initial: character}) => {
           />
         </View>
       )}
+
+      {/* Quests */}
+      <View
+        style={{
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+        }}>
+        {chara.quests.map(quest => (
+          <ActiveQuest item={quest} />
+        ))}
+      </View>
     </View>
   );
 };
@@ -231,6 +243,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 20,
     flex: 1,
+    flexBasis: 300,
   },
   flavor: {},
   stats: {backgroundColor: 'red'},

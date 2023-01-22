@@ -1,6 +1,12 @@
-import {Item} from 'react-native-paper/lib/typescript/components/List/List';
 import SQLite, {SQLiteDatabase} from 'react-native-sqlite-storage';
-import {character, gift, housekeeping} from './types';
+import {
+  character,
+  gift,
+  activeQuest,
+  housekeeping,
+  majorGoal,
+  goal,
+} from './types';
 
 // NOTE: Every time you replace the db, you have to manually uninstall the app from Android
 /**
@@ -75,6 +81,7 @@ export const getCharacters = async () => {
 
         housekeeping: await getHousekeeping(characterRow.id, db),
         gifts: await getGifts(characterRow.id, db),
+        quests: await getCharacterQuests(characterRow.id, db),
       });
       console.log(characters[index].housekeeping);
     }
@@ -126,8 +133,22 @@ export const getGifts = async (charID: number, db: SQLiteDatabase) => {
   // This is what we will return
   const gifts: gift[] = [];
 
-  const query = `SELECT *
-    FROM Gifts_View
+  const query = `SELECT ag.id,
+        ag.character,
+        g.name,
+        g.pg,
+        g.description,
+        (a.cost + g.miracleLevel) as cost,
+        a.description AS activation,
+        aoe.description AS aoe,
+        f.description AS flexibility,
+        g.common,
+        (g.miracleLevel + a.cps + aoe.cps + f.cps + case when g.common then 0 else 1 end) AS cps
+    FROM Active_Gifts ag
+        JOIN Gifts g ON ag.gift = g.id
+        JOIN Activation a ON g.activation = a.id
+        JOIN AoE aoe ON g.aoe = aoe.id
+        JOIN Flexibility f ON g.flexibility = f.id
     WHERE character = ${charID}`;
   const result = (await db.executeSql(query))[0];
   for (let index = 0; index < result.rows.length; index++) {
@@ -147,6 +168,126 @@ export const getGifts = async (charID: number, db: SQLiteDatabase) => {
   }
 
   return gifts;
+};
+
+/**
+ * Queries character's quests
+ *
+ * @returns activeQuest[]
+ */
+export const getCharacterQuests = async (
+  charID: number,
+  db: SQLiteDatabase,
+) => {
+  // This is what we will return
+  const quests: activeQuest[] = [];
+
+  const query = `SELECT aq.id,
+      aq.quest,
+      aq.character, 
+      q.name, 
+      q.description, 
+      q.pg, 
+      aq.earnedXP, 
+      aq.neededXP 
+    FROM Active_Quests aq 
+      JOIN Quests q ON aq.quest = q.id
+    WHERE character = ${charID}`;
+  console.log(query);
+  const result = (await db.executeSql(query))[0];
+  for (let index = 0; index < result.rows.length; index++) {
+    const item = result.rows.item(index);
+    quests.push({
+      key: item.id,
+      name: item.name,
+      pg: item.pg,
+      description: item.description,
+      earnedXP: item.earnedXP,
+      neededXP: item.neededXP,
+      questFlavor: await getQuestFlavor(charID, item.quest, db),
+      majorGoals: await getMajorGoals(charID, item.quest, db),
+    });
+  }
+
+  return quests;
+};
+
+/**
+ * Queries character's quests
+ *
+ * @returns majorGoal[]
+ */
+export const getMajorGoals = async (
+  charID: number,
+  questID: number,
+  db: SQLiteDatabase,
+) => {
+  // This is what we will return
+  const goals: majorGoal[] = [];
+
+  const query = `SELECT mg.id,
+    q.id as questID,
+    c.id as character,
+    mg.description,
+    mg.id IN (SELECT cg.goal
+        FROM Completed_Goals cg
+        JOIN Major_Goals mg ON cg.goal = mg.id
+      WHERE cg.character = c.id) 
+      as completed
+    FROM Major_Goals mg
+        JOIN Quests q ON mg.Quest = q.id
+        JOIN Active_Quests aq ON aq.quest = q.id
+        JOIN Characters c ON aq.character = c.id
+    WHERE character = ${charID}
+    AND questID = ${questID}`;
+  console.log(query);
+  const result = (await db.executeSql(query))[0];
+  for (let index = 0; index < result.rows.length; index++) {
+    const item = result.rows.item(index);
+    goals.push({
+      key: item.id,
+      description: item.description,
+      completed: item.completed,
+    });
+  }
+
+  return goals;
+};
+
+/**
+ * Queries character's quest flavor
+ *
+ * @returns questFLavor[]
+ */
+export const getQuestFlavor = async (
+  charID: number,
+  questID: number,
+  db: SQLiteDatabase,
+) => {
+  // This is what we will return
+  const goals: goal[] = [];
+
+  const query = `SELECT qf.id,
+        q.id as questID,
+        c.id as character,
+        qf.description
+    FROM Quest_Flavor qf
+      JOIN Quests q ON qf.quest = q.id
+      JOIN Active_Quests aq ON aq.quest = q.id
+      JOIN Characters c ON aq.character = c.id
+    WHERE character = ${charID}
+    AND questID = ${questID}`;
+  console.log(query);
+  const result = (await db.executeSql(query))[0];
+  for (let index = 0; index < result.rows.length; index++) {
+    const item = result.rows.item(index);
+    goals.push({
+      key: item.id,
+      description: item.description,
+    });
+  }
+
+  return goals;
 };
 
 /**

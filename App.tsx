@@ -43,15 +43,13 @@ const App = () => {
 
   // Component
   return (
-    <SafeAreaView style={{backgroundColor: colors.background}}>
-      <ScrollView contentInsetAdjustmentBehavior="automatic">
-        <View>
-          {characters.map(c => (
-            <Character key={c.key} initial={c} />
-          ))}
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    <ScrollView>
+      <View>
+        {characters.map(c => (
+          <Character key={c.key} initial={c} />
+        ))}
+      </View>
+    </ScrollView>
   );
 };
 
@@ -59,7 +57,9 @@ const AppWrapper = () => {
   return (
     <PaperProvider>
       <Provider store={store}>
-        <App />
+        <SafeAreaView>
+          <App />
+        </SafeAreaView>
       </Provider>
     </PaperProvider>
   );

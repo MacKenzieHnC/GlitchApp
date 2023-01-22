@@ -9,6 +9,8 @@ export interface character {
   costs: costs;
   housekeeping: housekeeping;
   gifts: gift[];
+
+  quests: activeQuest[];
 }
 
 export interface flavor {
@@ -53,4 +55,26 @@ export interface gift {
   flexibility: string;
   common: boolean;
   cps: number;
+}
+
+export interface activeQuest {
+  key: number;
+  earnedXP: number;
+  neededXP: number;
+  name: string;
+  pg: number;
+  description: string;
+  questFlavor: goal[];
+  majorGoals: majorGoal[];
+}
+
+export interface goal {
+  key: number;
+  description: string;
+}
+
+export interface majorGoal {
+  key: number;
+  description: string;
+  completed: boolean;
 }
