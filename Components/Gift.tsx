@@ -10,7 +10,7 @@ const Gift = ({item}: {item: gift}) => {
   const {colors} = useTheme();
   return (
     <View style={styles.container}>
-      <Text style={{color: colors.primary}}>{item.name}</Text>
+      <Text style={{...styles.h3, color: colors.primary}}>{item.name}</Text>
       <Table
         data={['cost', 'activation', 'aoe', 'flexibility'].map(key => ({
           name: (
@@ -42,6 +42,11 @@ const styles = StyleSheet.create({
   listItem: {
     padding: 5,
     textAlignVertical: 'top',
+  },
+  h3: {
+    flex: 1,
+    textAlign: 'center',
+    fontSize: 20,
   },
 });
 
