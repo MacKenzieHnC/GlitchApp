@@ -83,7 +83,6 @@ export const getCharacters = async () => {
         gifts: await getGifts(characterRow.id, db),
         quests: await getCharacterQuests(characterRow.id, db),
       });
-      console.log(characters[index].housekeeping);
     }
     return characters;
   } catch (error) {
@@ -193,7 +192,6 @@ export const getCharacterQuests = async (
     FROM Active_Quests aq 
       JOIN Quests q ON aq.quest = q.id
     WHERE character = ${charID}`;
-  console.log(query);
   const result = (await db.executeSql(query))[0];
   for (let index = 0; index < result.rows.length; index++) {
     const item = result.rows.item(index);
@@ -240,7 +238,6 @@ export const getMajorGoals = async (
         JOIN Characters c ON aq.character = c.id
     WHERE character = ${charID}
     AND questID = ${questID}`;
-  console.log(query);
   const result = (await db.executeSql(query))[0];
   for (let index = 0; index < result.rows.length; index++) {
     const item = result.rows.item(index);
@@ -277,7 +274,6 @@ export const getQuestFlavor = async (
       JOIN Characters c ON aq.character = c.id
     WHERE character = ${charID}
     AND questID = ${questID}`;
-  console.log(query);
   const result = (await db.executeSql(query))[0];
   for (let index = 0; index < result.rows.length; index++) {
     const item = result.rows.item(index);
@@ -299,18 +295,23 @@ export const getQuestFlavor = async (
 export const saveCharacter = async (id: number, changes: any) => {
   const db = await getDBConnection();
 
+  console.log(changes);
+
   // Build the update section of the query
   var changeStr = '';
-  Object.keys(changes.charTable).forEach(
-    key => (changeStr += `${key} = ${changes.charTable[key]}, `),
+  Object.keys(changes).forEach(
+    key => (changeStr += `${key} = ${changes[key]}, `),
   );
   changeStr = changeStr.slice(0, changeStr.length - 2); // Remove trailing comma and space
+  console.log(changeStr);
+  console.log('here');
 
   try {
     // Build the query
     const query = `UPDATE Characters
     SET ${changeStr}
     WHERE id = ${id};`;
+    console.log(query);
 
     // Execute the query
     await db.executeSql(query);
