@@ -295,23 +295,18 @@ export const getQuestFlavor = async (
 export const saveCharacter = async (id: number, changes: any) => {
   const db = await getDBConnection();
 
-  console.log(changes);
-
   // Build the update section of the query
   var changeStr = '';
   Object.keys(changes).forEach(
     key => (changeStr += `${key} = ${changes[key]}, `),
   );
   changeStr = changeStr.slice(0, changeStr.length - 2); // Remove trailing comma and space
-  console.log(changeStr);
-  console.log('here');
 
   try {
     // Build the query
     const query = `UPDATE Characters
     SET ${changeStr}
     WHERE id = ${id};`;
-    console.log(query);
 
     // Execute the query
     await db.executeSql(query);
