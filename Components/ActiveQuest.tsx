@@ -43,7 +43,7 @@ const ActiveQuest = ({item}: {item: activeQuest}) => {
         <View key={index} style={{...styles.row, flexWrap: 'nowrap'}}>
           <Checkbox
             status={majorChecked[index] ? 'checked' : 'unchecked'}
-            disabled={item.majorGoals[index].completed}
+            disabled={!!item.majorGoals[index].completed}
             onPress={() => {
               let newArr = [...majorChecked];
               newArr[index] = !newArr[index];
@@ -84,6 +84,7 @@ const styles = StyleSheet.create({
     padding: 10,
     margin: 5,
     borderRadius: 15,
+    flexBasis: 300,
   },
   goalContainer: {
     alignItems: 'flex-start',
