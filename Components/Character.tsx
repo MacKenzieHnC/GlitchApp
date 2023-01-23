@@ -128,8 +128,8 @@ const Character = ({initial}: {initial: character}) => {
       {chara.gifts.length > 0 && (
         <View style={styles.innerContainer}>
           <Text style={{...styles.h2, color: colors.primary}}>Gifts</Text>
-          {chara.gifts.map(gift => (
-            <Gift item={gift} />
+          {chara.gifts.map((gift, index) => (
+            <Gift key={index} item={gift} />
           ))}
         </View>
       )}
@@ -232,8 +232,8 @@ const Character = ({initial}: {initial: character}) => {
 
       {/* Quests */}
       <View style={styles.row}>
-        {chara.quests.map(quest => (
-          <ActiveQuest item={quest} />
+        {chara.quests.map((quest, index) => (
+          <ActiveQuest key={index} item={quest} />
         ))}
       </View>
     </View>
