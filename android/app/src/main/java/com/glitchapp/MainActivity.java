@@ -1,5 +1,6 @@
 package com.glitchapp;
 
+import android.os.Bundle; // For ReactNavigation
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.ReactRootView;
@@ -14,6 +15,14 @@ public class MainActivity extends ReactActivity {
   @Override
   protected String getMainComponentName() {
     return "GlitchApp";
+  }
+
+  /**
+   * For ReactNavigation
+   */
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(null);
   }
 
   /**
