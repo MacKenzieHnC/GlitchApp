@@ -8,49 +8,21 @@
  */
 
 // React
-import React, {useEffect, useState} from 'react';
-import {SafeAreaView, ScrollView, View} from 'react-native';
+import React from 'react';
+import {SafeAreaView} from 'react-native';
 
 // Redux
 import {Provider} from 'react-redux';
 import {store} from './utils/store';
 
 // Paper
-import {Provider as PaperProvider, useTheme} from 'react-native-paper';
+import {Provider as PaperProvider} from 'react-native-paper';
+import CharacterScreen from './Screens/CharacterScreen';
 
 // My stuff
-import Character from './Components/Character';
-import LoadScreen from './Components/LoadScreen';
-import {getCharacters} from './utils/db-service';
-import {character} from './utils/types';
 
 const App = () => {
-  const {colors} = useTheme();
-
-  // Load characters
-  const [characters, setCharacters] = useState<character[]>();
-  useEffect(() => {
-    (async () => {
-      var c = await getCharacters();
-      setCharacters(c);
-    })();
-  }, []);
-
-  // Await load characters
-  if (!characters) {
-    return <LoadScreen />;
-  }
-
-  // Component
-  return (
-    <ScrollView>
-      <View>
-        {characters.map(c => (
-          <Character key={c.key} initial={c} />
-        ))}
-      </View>
-    </ScrollView>
-  );
+  return <CharacterScreen />;
 };
 
 const AppWrapper = () => {
