@@ -23,7 +23,6 @@ import Character from './Components/Character';
 import LoadScreen from './Components/LoadScreen';
 import {getCharacters} from './utils/db-service';
 import {character} from './utils/types';
-import {NavigationContainer} from '@react-navigation/native';
 
 const App = () => {
   const {colors} = useTheme();
@@ -56,15 +55,13 @@ const App = () => {
 
 const AppWrapper = () => {
   return (
-    <NavigationContainer>
-      <PaperProvider>
-        <Provider store={store}>
-          <SafeAreaView>
-            <App />
-          </SafeAreaView>
-        </Provider>
-      </PaperProvider>
-    </NavigationContainer>
+    <PaperProvider>
+      <Provider store={store}>
+        <SafeAreaView>
+          <App />
+        </SafeAreaView>
+      </Provider>
+    </PaperProvider>
   );
 };
 
