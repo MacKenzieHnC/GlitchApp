@@ -9,14 +9,19 @@
 
 // React
 import React from 'react';
-import {SafeAreaView} from 'react-native';
+import {Appearance, SafeAreaView, useColorScheme} from 'react-native';
 
 // Redux
 import {Provider} from 'react-redux';
 import {store} from './utils/store';
 
 // Paper
-import {Provider as PaperProvider} from 'react-native-paper';
+import {
+  Provider as PaperProvider,
+  MD3DarkTheme,
+  MD3LightTheme,
+  Text,
+} from 'react-native-paper';
 import CharacterScreen from './Screens/CharacterScreen';
 
 // My stuff
@@ -26,8 +31,9 @@ const App = () => {
 };
 
 const AppWrapper = () => {
+  const scheme = useColorScheme();
   return (
-    <PaperProvider>
+    <PaperProvider theme={scheme === 'dark' ? MD3DarkTheme : MD3LightTheme}>
       <Provider store={store}>
         <App />
       </Provider>

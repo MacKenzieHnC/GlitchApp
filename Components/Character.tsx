@@ -49,7 +49,11 @@ const Character = ({initial}: {initial: character}) => {
 
   const flavorData = Object.keys(chara.flavor)
     .map(key => ({
-      name: <Text style={styles.listItem}>{capitalize(key)}:</Text>,
+      name: (
+        <Text style={{...styles.listItem, color: colors.primary}}>
+          {capitalize(key)}:
+        </Text>
+      ),
       value: (
         <Text style={{...styles.listItem, color: colors.primary}}>
           {chara.flavor[key as keyof flavor]}

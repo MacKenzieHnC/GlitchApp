@@ -1,14 +1,25 @@
 import React from 'react';
 import {useState, useEffect} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
-import {IconButton, Text, useTheme} from 'react-native-paper';
+import {Checkbox, IconButton, Text, useTheme} from 'react-native-paper';
+import {Popup} from 'react-native-windows';
+import {useDispatch, useSelector} from 'react-redux';
 import Character from '../Components/Character';
 import LoadScreen from '../Components/LoadScreen';
+import Modal from '../Components/Modal';
+import Options from '../Components/Options';
+import Table from '../Components/Table';
 import {getCharacters} from '../utils/db-service';
+import {getPreferences, preferencesChanged} from '../utils/store/appSlice';
 import {character} from '../utils/types';
+import {capitalize} from '../utils/utils';
 
 export default function CharacterScreen() {
   const {colors} = useTheme();
+  const [popupOpen, setPopupOpen] = useState(true);
+  const dispatch = useDispatch();
+  const {preferences} = useSelector(getPreferences);
+
   // Load characters
   const [characters, setCharacters] = useState<character[]>();
   useEffect(() => {
@@ -25,7 +36,30 @@ export default function CharacterScreen() {
 
   // Component
   return (
-    <View style={styles.container}>
+    <View style={{...styles.container, backgroundColor: colors.background}}>
+      <Modal isOpen={popupOpen} onDismiss={() => setPopupOpen(false)}>
+        <Options>
+          <Text style={styles.h2}>Characters</Text>
+          <Table
+            data={Object.keys(preferences).map(key => ({
+              name: (
+                <Checkbox
+                  status={preferences[key] ? 'checked' : 'unchecked'}
+                  onPress={() =>
+                    dispatch(
+                      preferencesChanged({
+                        ...preferences,
+                        [key]: !preferences[key],
+                      }),
+                    )
+                  }
+                />
+              ),
+              value: <Text style={styles.option}>{capitalize(key)}</Text>,
+            }))}
+          />
+        </Options>
+      </Modal>
       <View
         style={{...styles.header, backgroundColor: colors.primaryContainer}}>
         <Text style={{...styles.h1, color: colors.primary}}>Characters</Text>
@@ -34,7 +68,7 @@ export default function CharacterScreen() {
           size={30}
           iconColor={colors.primary}
           rippleColor={colors.secondary}
-          onPress={() => console.log('Pressed')}
+          onPress={() => setPopupOpen(!popupOpen)}
         />
       </View>
       <ScrollView contentContainerStyle={styles.scrollview}>
@@ -62,5 +96,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     textAlignVertical: 'center',
     fontSize: 30,
+  },
+  h2: {
+    textAlign: 'center',
+    fontSize: 25,
+  },
+  option: {
+    textAlign: 'center',
+    textAlignVertical: 'center',
   },
 });
