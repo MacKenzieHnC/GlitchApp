@@ -21,7 +21,8 @@ const ActiveQuest = ({item}: {item: activeQuest}) => {
     return <LoadScreen />;
   }
   return (
-    <View style={{...styles.container, backgroundColor: colors.backdrop}}>
+    <View
+      style={{...styles.container, backgroundColor: colors.primaryContainer}}>
       <Text style={{...styles.header, color: colors.primary}}>{item.name}</Text>
       <Text style={{color: colors.primary}}>
         {item.earnedXP} / {item.neededXP}xp

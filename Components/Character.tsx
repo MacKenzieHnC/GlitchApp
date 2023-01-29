@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Alert, Text, TouchableOpacity, View} from 'react-native';
+import {Alert, TouchableOpacity, View} from 'react-native';
 import {StyleSheet} from 'react-native-windows';
 import {character, costs, flavor, housekeeping, stats} from '../utils/types';
 import Table from './Table';
@@ -8,7 +8,7 @@ import {capitalize, detectChanges, getPropFromPath} from '../utils/utils';
 import {saveCharacter} from '../utils/db-service';
 import {useSelector} from 'react-redux';
 import {getPreferences} from '../utils/store/appSlice';
-import {useTheme} from 'react-native-paper';
+import {Text, useTheme} from 'react-native-paper';
 import Gift from './Gift';
 import ActiveQuest from './ActiveQuest';
 
@@ -49,11 +49,7 @@ const Character = ({initial}: {initial: character}) => {
 
   const flavorData = Object.keys(chara.flavor)
     .map(key => ({
-      name: (
-        <Text style={{...styles.listItem, color: colors.primary}}>
-          {capitalize(key)}:
-        </Text>
-      ),
+      name: <Text style={styles.listItem}>{capitalize(key)}:</Text>,
       value: (
         <Text style={{...styles.listItem, color: colors.primary}}>
           {chara.flavor[key as keyof flavor]}
@@ -81,7 +77,7 @@ const Character = ({initial}: {initial: character}) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        style={{backgroundColor: colors.backdrop}}
+        style={{backgroundColor: colors.primaryContainer}}
         onPress={onSave}>
         <Text style={{...styles.button, color: colors.primary}}>SAVE</Text>
       </TouchableOpacity>
@@ -96,7 +92,7 @@ const Character = ({initial}: {initial: character}) => {
       {/* XP */}
       <View style={{alignItems: 'center', flexDirection: 'row'}}>
         <TouchableOpacity
-          style={{backgroundColor: colors.backdrop}}
+          style={{backgroundColor: colors.primaryContainer}}
           onPress={() =>
             setChara({
               ...chara,
@@ -107,7 +103,7 @@ const Character = ({initial}: {initial: character}) => {
         </TouchableOpacity>
         <Text style={{padding: 5, color: colors.primary}}>XP: {chara.xp}</Text>
         <TouchableOpacity
-          style={{backgroundColor: colors.backdrop}}
+          style={{backgroundColor: colors.primaryContainer}}
           onPress={() => setChara({...chara, xp: chara.xp + 1})}>
           <Text style={{...styles.button, color: colors.primary}}>{'>'}</Text>
         </TouchableOpacity>
@@ -172,7 +168,7 @@ const Character = ({initial}: {initial: character}) => {
               data={Object.keys(chara.costs).map(key => ({
                 backButton: (
                   <TouchableOpacity
-                    style={{backgroundColor: colors.backdrop}}
+                    style={{backgroundColor: colors.primaryContainer}}
                     onPress={() =>
                       setChara({
                         ...chara,
@@ -206,7 +202,7 @@ const Character = ({initial}: {initial: character}) => {
                 ),
                 forwardButton: (
                   <TouchableOpacity
-                    style={{backgroundColor: colors.backdrop}}
+                    style={{backgroundColor: colors.primaryContainer}}
                     onPress={() =>
                       setChara({
                         ...chara,
