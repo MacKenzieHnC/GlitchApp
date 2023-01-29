@@ -29,9 +29,7 @@ const AppWrapper = () => {
   return (
     <PaperProvider>
       <Provider store={store}>
-        <SafeAreaView>
-          <App />
-        </SafeAreaView>
+        <App />
       </Provider>
     </PaperProvider>
   );

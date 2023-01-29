@@ -1,6 +1,6 @@
 import React from 'react';
 import {useState, useEffect} from 'react';
-import {ScrollView, View} from 'react-native';
+import {ScrollView, StyleSheet, View} from 'react-native';
 import Character from '../Components/Character';
 import LoadScreen from '../Components/LoadScreen';
 import {getCharacters} from '../utils/db-service';
@@ -23,12 +23,19 @@ export default function CharacterScreen() {
 
   // Component
   return (
-    <ScrollView>
-      <View>
+    <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollview}>
         {characters.map(c => (
           <Character key={c.key} initial={c} />
         ))}
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {flex: 1},
+  scrollview: {
+    flexGrow: 1,
+  },
+});
