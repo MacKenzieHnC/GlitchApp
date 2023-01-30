@@ -223,21 +223,26 @@ export const getMajorGoals = async (
   // This is what we will return
   const goals: majorGoal[] = [];
 
-  const query = `SELECT mg.id,
-    q.id as questID,
-    c.id as character,
-    mg.description,
-    mg.id IN (SELECT cg.goal
-        FROM Completed_Goals cg
-        JOIN Major_Goals mg ON cg.goal = mg.id
-      WHERE cg.character = c.id) 
-      as completed
-    FROM Major_Goals mg
-        JOIN Quests q ON mg.Quest = q.id
-        JOIN Active_Quests aq ON aq.quest = q.id
-        JOIN Characters c ON aq.character = c.id
-    WHERE character = ${charID}
-    AND questID = ${questID}`;
+  const query = `SELECT g.id,
+        q.id as quest,
+        c.id as character,
+        g.description,
+        g.id IN (SELECT cg.goal
+            FROM Completed_Goals cg
+            JOIN Goals g ON cg.goal = g.id
+          WHERE cg.character = c.id) AS completed 
+    FROM Goals g
+    JOIN Characters c ON aq.character = c.id
+    JOIN Quests q ON g.Quest = q.id
+    JOIN Active_Quests aq ON aq.quest = q.id
+    WHERE g.major = 'true' 
+    AND (g.id IN (SELECT ug.goal 
+            FROM Unique_Goals ug 
+            JOIN Goals g ON ug.goal = g.id
+            WHERE ug.character = c.id) 
+        OR g.unique_goal = 'false')
+    AND character = ${charID}
+    AND g.quest = ${questID}`;
   const result = (await db.executeSql(query))[0];
   for (let index = 0; index < result.rows.length; index++) {
     const item = result.rows.item(index);
@@ -264,16 +269,26 @@ export const getQuestFlavor = async (
   // This is what we will return
   const goals: goal[] = [];
 
-  const query = `SELECT qf.id,
-        q.id as questID,
+  const query = `SELECT g.id,
+        q.id as quest,
         c.id as character,
-        qf.description
-    FROM Quest_Flavor qf
-      JOIN Quests q ON qf.quest = q.id
-      JOIN Active_Quests aq ON aq.quest = q.id
-      JOIN Characters c ON aq.character = c.id
-    WHERE character = ${charID}
-    AND questID = ${questID}`;
+        g.description,
+        g.id IN (SELECT cg.goal
+            FROM Completed_Goals cg
+            JOIN Goals g ON cg.goal = g.id
+          WHERE cg.character = c.id) AS completed 
+    FROM Goals g
+    JOIN Characters c ON aq.character = c.id
+    JOIN Quests q ON g.Quest = q.id
+    JOIN Active_Quests aq ON aq.quest = q.id
+    WHERE g.major = 'false' 
+    AND (g.id IN (SELECT ug.goal 
+            FROM Unique_Goals ug 
+            JOIN Goals g ON ug.goal = g.id
+            WHERE ug.character = c.id) 
+        OR g.unique_goal = 'false')
+    AND character = ${charID}
+    AND g.quest = ${questID}`;
   const result = (await db.executeSql(query))[0];
   for (let index = 0; index < result.rows.length; index++) {
     const item = result.rows.item(index);
