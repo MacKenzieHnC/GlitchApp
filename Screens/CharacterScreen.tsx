@@ -15,7 +15,7 @@ import {capitalize} from '../utils/utils';
 
 export default function CharacterScreen() {
   const {colors} = useTheme();
-  const [popupOpen, setPopupOpen] = useState(true);
+  const [popupOpen, setPopupOpen] = useState(false);
   const dispatch = useDispatch();
   const {preferences} = useSelector(getPreferences);
 
