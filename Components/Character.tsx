@@ -89,31 +89,39 @@ const Character = ({initial}: {initial: character}) => {
       <Text style={{...styles.h1, color: colors.primary}}>
         {lastSaved.name}
       </Text>
-      <Text style={{...styles.h2, color: colors.primary}}>
-        Disciplined in {lastSaved.discipline}
-      </Text>
+      {preferences.characteristics.discipline && (
+        <View style={styles.textView}>
+          <Text style={{...styles.h2, color: colors.primary}}>
+            Disciplined in {lastSaved.discipline}
+          </Text>
+        </View>
+      )}
 
       {/* XP */}
-      <View style={{alignItems: 'center', flexDirection: 'row'}}>
-        <TouchableOpacity
-          style={{backgroundColor: colors.primaryContainer}}
-          onPress={() =>
-            setChara({
-              ...chara,
-              xp: chara.xp === 0 ? chara.xp : chara.xp - 1,
-            })
-          }>
-          <Text style={{...styles.button, color: colors.primary}}>{'<'}</Text>
-        </TouchableOpacity>
-        <Text style={{padding: 5, color: colors.primary}}>XP: {chara.xp}</Text>
-        <TouchableOpacity
-          style={{backgroundColor: colors.primaryContainer}}
-          onPress={() => setChara({...chara, xp: chara.xp + 1})}>
-          <Text style={{...styles.button, color: colors.primary}}>{'>'}</Text>
-        </TouchableOpacity>
-      </View>
+      {preferences.characteristics.xp && (
+        <View style={{alignItems: 'center', flexDirection: 'row'}}>
+          <TouchableOpacity
+            style={{backgroundColor: colors.primaryContainer}}
+            onPress={() =>
+              setChara({
+                ...chara,
+                xp: chara.xp === 0 ? chara.xp : chara.xp - 1,
+              })
+            }>
+            <Text style={{...styles.button, color: colors.primary}}>{'<'}</Text>
+          </TouchableOpacity>
+          <Text style={{padding: 5, color: colors.primary}}>
+            XP: {chara.xp}
+          </Text>
+          <TouchableOpacity
+            style={{backgroundColor: colors.primaryContainer}}
+            onPress={() => setChara({...chara, xp: chara.xp + 1})}>
+            <Text style={{...styles.button, color: colors.primary}}>{'>'}</Text>
+          </TouchableOpacity>
+        </View>
+      )}
 
-      {preferences.flavor && (
+      {preferences.characteristics.flavor && (
         <View style={styles.innerContainer}>
           <Text style={{...styles.h2, color: colors.primary}}>Flavor</Text>
           <Table
@@ -125,7 +133,7 @@ const Character = ({initial}: {initial: character}) => {
       )}
 
       {/* Gifts */}
-      {chara.gifts.length > 0 && (
+      {chara.gifts.length > 0 && preferences.characteristics.gifts && (
         <View style={styles.innerContainer}>
           <Text style={{...styles.h2, color: colors.primary}}>Gifts</Text>
           {chara.gifts.map((gift, index) => (
@@ -136,7 +144,7 @@ const Character = ({initial}: {initial: character}) => {
 
       <View style={styles.row}>
         {/* Stats */}
-        {preferences.stats && (
+        {preferences.characteristics.stats && (
           <View style={styles.innerContainer}>
             <Text style={{...styles.h2, color: colors.primary}}>Stats</Text>
             <Table
@@ -163,7 +171,7 @@ const Character = ({initial}: {initial: character}) => {
         )}
 
         {/* Costs */}
-        {preferences.costs && (
+        {preferences.characteristics.costs && (
           <View style={styles.innerContainer}>
             <Text style={{...styles.h2, color: colors.primary}}>Costs</Text>
             <Table
@@ -231,11 +239,13 @@ const Character = ({initial}: {initial: character}) => {
       </View>
 
       {/* Quests */}
-      <View style={styles.row}>
-        {chara.quests.map((quest, index) => (
-          <ActiveQuest key={index} item={quest} />
-        ))}
-      </View>
+      {preferences.characteristics.quests && (
+        <View style={styles.row}>
+          {chara.quests.map((quest, index) => (
+            <ActiveQuest key={index} item={quest} />
+          ))}
+        </View>
+      )}
     </View>
   );
 };
@@ -246,7 +256,6 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     justifyContent: 'center',
     padding: 20,
-    flex: 1,
     flexBasis: 300,
   },
   innerContainer: {
@@ -293,6 +302,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     fontSize: 20,
     textAlign: 'center',
+  },
+  textView: {
+    flex: 1,
   },
 });
 

@@ -2,6 +2,8 @@ import React, {useState} from 'react';
 import {Text, View} from 'react-native';
 import {Checkbox, useTheme} from 'react-native-paper';
 import {StyleSheet} from 'react-native-windows';
+import {useSelector} from 'react-redux';
+import {getPreferences} from '../utils/store/appSlice';
 import {activeQuest} from '../utils/types';
 import LoadScreen from './LoadScreen';
 
@@ -15,7 +17,7 @@ const ActiveQuest = ({item}: {item: activeQuest}) => {
   const [flavorChecked, setFlavorChecked] = useState<boolean[]>(
     new Array(item.questFlavor.length).fill(false),
   );
-  const [displayDescription, setDisplayDescription] = useState(true);
+  const {preferences} = useSelector(getPreferences);
 
   if (!majorChecked || !flavorChecked) {
     return <LoadScreen />;
@@ -27,15 +29,10 @@ const ActiveQuest = ({item}: {item: activeQuest}) => {
       <Text style={{color: colors.primary}}>
         {item.earnedXP} / {item.neededXP}xp
       </Text>
-      <View style={styles.row}>
-        <Checkbox
-          status={displayDescription ? 'checked' : 'unchecked'}
-          onPress={() => setDisplayDescription(!displayDescription)}
-        />
-        <Text style={{...styles.h3, color: colors.primary}}>Description</Text>
-      </View>
-      {displayDescription && (
-        <Text style={{color: colors.primary}}>{item.description}</Text>
+      {preferences.descriptions && (
+        <View style={styles.textView}>
+          <Text style={{color: colors.primary}}>{item.description}</Text>
+        </View>
       )}
 
       {/* Major Goals */}
@@ -111,6 +108,9 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     flexWrap: 'nowrap',
+  },
+  textView: {
+    flex: 1,
   },
 });
 

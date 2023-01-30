@@ -2,7 +2,20 @@ import {createSelector, createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
   status: 'idle',
-  entities: {preferences: {flavor: true, stats: true, costs: true}},
+  entities: {
+    preferences: {
+      descriptions: true,
+      characteristics: {
+        discipline: true,
+        xp: true,
+        flavor: true,
+        gifts: true,
+        stats: true,
+        costs: true,
+        quests: true,
+      },
+    },
+  },
 };
 
 export const appSlice = createSlice({

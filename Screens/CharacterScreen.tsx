@@ -39,23 +39,44 @@ export default function CharacterScreen() {
     <View style={{...styles.container, backgroundColor: colors.background}}>
       <Modal isOpen={popupOpen} onDismiss={() => setPopupOpen(false)}>
         <Options>
-          <Text style={styles.h2}>Characters</Text>
+          <Text style={styles.h2}>General</Text>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Checkbox
+              status={preferences.descriptions ? 'checked' : 'unchecked'}
+              onPress={() =>
+                dispatch(
+                  preferencesChanged({
+                    ...preferences,
+                    descriptions: !preferences.descriptions,
+                  }),
+                )
+              }
+            />
+            <Text>Descriptions</Text>
+          </View>
+          <Text style={styles.h2}>Characteristics</Text>
           <Table
-            data={Object.keys(preferences).map(key => ({
+            rowStyle={{justifyContent: 'center'}}
+            data={Object.keys(preferences.characteristics).map(key => ({
               name: (
                 <Checkbox
-                  status={preferences[key] ? 'checked' : 'unchecked'}
+                  status={
+                    preferences.characteristics[key] ? 'checked' : 'unchecked'
+                  }
                   onPress={() =>
                     dispatch(
                       preferencesChanged({
                         ...preferences,
-                        [key]: !preferences[key],
+                        characteristics: {
+                          ...preferences.characteristics,
+                          [key]: !preferences.characteristics[key],
+                        },
                       }),
                     )
                   }
                 />
               ),
-              value: <Text style={styles.option}>{capitalize(key)}</Text>,
+              value: <Text>{capitalize(key)}</Text>,
             }))}
           />
         </Options>
@@ -100,9 +121,5 @@ const styles = StyleSheet.create({
   h2: {
     textAlign: 'center',
     fontSize: 25,
-  },
-  option: {
-    textAlign: 'center',
-    textAlignVertical: 'center',
   },
 });

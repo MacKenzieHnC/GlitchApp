@@ -2,12 +2,15 @@ import React from 'react';
 import {Text, View} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import {StyleSheet} from 'react-native-windows';
+import {useSelector} from 'react-redux';
+import {getPreferences} from '../utils/store/appSlice';
 import {gift} from '../utils/types';
 import {capitalize} from '../utils/utils';
 import Table from './Table';
 
 const Gift = ({item}: {item: gift}) => {
   const {colors} = useTheme();
+  const {preferences} = useSelector(getPreferences);
   return (
     <View style={styles.container}>
       <Text style={{...styles.h3, color: colors.primary}}>{item.name}</Text>
@@ -27,7 +30,11 @@ const Gift = ({item}: {item: gift}) => {
         rowStyle={undefined}
         priviledge={[true, false]}
       />
-      <Text style={{color: colors.primary}}>{item.description}</Text>
+      {preferences.descriptions && (
+        <View style={styles.textView}>
+          <Text style={{color: colors.primary}}>{item.description}</Text>
+        </View>
+      )}
     </View>
   );
 };
@@ -47,6 +54,9 @@ const styles = StyleSheet.create({
     flex: 1,
     textAlign: 'center',
     fontSize: 20,
+  },
+  textView: {
+    flex: 1,
   },
 });
 
