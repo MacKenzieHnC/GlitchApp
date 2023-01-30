@@ -1,9 +1,11 @@
 import {createSelector, createSlice} from '@reduxjs/toolkit';
+import {Appearance} from 'react-native';
 
 const initialState = {
   status: 'idle',
   entities: {
     preferences: {
+      darkMode: Appearance.getColorScheme() === 'dark',
       descriptions: true,
       characteristics: {
         discipline: true,
