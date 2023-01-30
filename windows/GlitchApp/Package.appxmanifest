@@ -7,15 +7,15 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="b60cbb2f-9e9f-4b0f-a55f-44946181026e"
+    Name="MacKenzieHnCGlitchApp"
     Publisher="CN=Lepre"
-    Version="1.0.0.0" />
+    Version="0.0.1.0" />
 
   <mp:PhoneIdentity PhoneProductId="b60cbb2f-9e9f-4b0f-a55f-44946181026e" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>GlitchApp</DisplayName>
-    <PublisherDisplayName>Lepre</PublisherDisplayName>
+    <PublisherDisplayName>MacKenzieHnC</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
