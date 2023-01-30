@@ -7,15 +7,15 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="MacKenzieHnCGlitchApp"
-    Publisher="CN=Lepre"
+    Name="45800MacKenzieHC.GlitchCharacterManagement"
+    Publisher="CN=1891AB23-36C1-406C-B200-6F125F75E4FD"
     Version="0.0.1.0" />
 
-  <mp:PhoneIdentity PhoneProductId="b60cbb2f-9e9f-4b0f-a55f-44946181026e" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="a67ff214-83fd-4a15-b28c-c38a84150661" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>GlitchApp</DisplayName>
-    <PublisherDisplayName>MacKenzieHnC</PublisherDisplayName>
+    <DisplayName>Glitch Character Management</DisplayName>
+    <PublisherDisplayName>MacKenzie H&amp;C</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -33,7 +33,7 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="GlitchApp.App">
       <uap:VisualElements
-        DisplayName="GlitchApp"
+        DisplayName="Glitch Character Management"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png"
         Description="GlitchApp"
@@ -43,8 +43,4 @@
       </uap:VisualElements>
     </Application>
   </Applications>
-
-  <Capabilities>
-    <Capability Name="internetClient" />
-  </Capabilities>
 </Package>

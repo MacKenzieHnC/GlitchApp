@@ -71,7 +71,18 @@
   <ImportGroup Label="ReactNativeWindowsPropertySheets">
     <Import Project="$(ReactNativeWindowsDir)\PropertySheets\external\Microsoft.ReactNative.Uwp.CppApp.props" Condition="Exists('$(ReactNativeWindowsDir)\PropertySheets\External\Microsoft.ReactNative.Uwp.CppApp.props')" />
   </ImportGroup>
-  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Label="UserMacros">
+    <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
+    <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
+    <PackageCertificateThumbprint>8F7DB8DC801C1E010E040B2B81E0A34BE33FD92A</PackageCertificateThumbprint>
+    <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
+    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+    <GenerateTestArtifacts>True</GenerateTestArtifacts>
+    <AppxBundle>Always</AppxBundle>
+    <AppxBundlePlatforms>x86|x64</AppxBundlePlatforms>
+    <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
+    <GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
+  </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -148,6 +159,7 @@
     </Midl>
   </ItemGroup>
   <ItemGroup>
+    <None Include="GlitchApp_TemporaryKey.pfx" />
     <None Include="PropertySheet.props" />
     <None Include="www\Glitch.db">
       <DeploymentContent>true</DeploymentContent>
@@ -166,6 +178,9 @@
   </ItemGroup>
   <ItemGroup>
     <Font Include="Assets\MaterialCommunityIcons.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Package.StoreAssociation.xml" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ReactNativeWindowsTargets">
