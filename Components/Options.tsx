@@ -27,6 +27,7 @@ const Options = ({children}) => {
       </View>
       <View style={styles.row}>
         <Switch
+          style={styles.switch}
           value={preferences.darkMode}
           onValueChange={() => {
             dispatch(
@@ -64,7 +65,12 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
-    alignItems: 'flex-end',
+    alignItems: 'center',
+  },
+  switch: {
+    marginRight: -7,
+    marginTop: -5,
+    marginBottom: 5,
   },
 });
 

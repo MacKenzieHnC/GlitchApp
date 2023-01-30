@@ -1,8 +1,7 @@
 import React from 'react';
 import {useState, useEffect} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
-import {Checkbox, IconButton, Text, useTheme} from 'react-native-paper';
-import {Popup} from 'react-native-windows';
+import {Checkbox, IconButton, Text, useTheme, Switch} from 'react-native-paper';
 import {useDispatch, useSelector} from 'react-redux';
 import Character from '../Components/Character';
 import LoadScreen from '../Components/LoadScreen';
@@ -41,16 +40,18 @@ export default function CharacterScreen() {
         <Options>
           <Text style={styles.h2}>General</Text>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Checkbox
-              status={preferences.descriptions ? 'checked' : 'unchecked'}
-              onPress={() =>
+            <Switch
+              value={preferences.descriptions}
+              style={styles.switch}
+              onValueChange={() => {
                 dispatch(
                   preferencesChanged({
                     ...preferences,
                     descriptions: !preferences.descriptions,
                   }),
-                )
-              }
+                );
+                return;
+              }}
             />
             <Text>Descriptions</Text>
           </View>
@@ -59,11 +60,10 @@ export default function CharacterScreen() {
             rowStyle={{justifyContent: 'center'}}
             data={Object.keys(preferences.characteristics).map(key => ({
               name: (
-                <Checkbox
-                  status={
-                    preferences.characteristics[key] ? 'checked' : 'unchecked'
-                  }
-                  onPress={() =>
+                <Switch
+                  style={styles.switch}
+                  value={preferences.characteristics[key]}
+                  onValueChange={() => {
                     dispatch(
                       preferencesChanged({
                         ...preferences,
@@ -72,8 +72,9 @@ export default function CharacterScreen() {
                           [key]: !preferences.characteristics[key],
                         },
                       }),
-                    )
-                  }
+                    );
+                    return;
+                  }}
                 />
               ),
               value: <Text>{capitalize(key)}</Text>,
@@ -121,5 +122,10 @@ const styles = StyleSheet.create({
   h2: {
     textAlign: 'center',
     fontSize: 25,
+  },
+  switch: {
+    marginRight: -7,
+    marginTop: -5,
+    marginBottom: 5,
   },
 });
