@@ -30,7 +30,7 @@ const ActiveQuest = ({item}: {item: activeQuest}) => {
         {item.earnedXP} / {item.neededXP}xp
       </Text>
       {preferences.descriptions && (
-        <View style={styles.textView}>
+        <View>
           <Text style={{color: colors.primary}}>{item.description}</Text>
         </View>
       )}
@@ -108,9 +108,6 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     flexWrap: 'nowrap',
-  },
-  textView: {
-    flex: 1,
   },
 });
 
