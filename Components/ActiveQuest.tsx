@@ -36,41 +36,55 @@ const ActiveQuest = ({item}: {item: activeQuest}) => {
       )}
 
       {/* Major Goals */}
-      <Text style={{...styles.h3, color: colors.primary}}>Major Goals</Text>
-      {item.majorGoals.map((goal, index) => (
-        <View key={index} style={{...styles.row, flexWrap: 'nowrap'}}>
-          <Checkbox
-            status={majorChecked[index] ? 'checked' : 'unchecked'}
-            disabled={!!item.majorGoals[index].completed}
-            onPress={() => {
-              let newArr = [...majorChecked];
-              newArr[index] = !newArr[index];
-              setMajorChecked(newArr);
-            }}
-          />
-          <Text style={{...styles.text, color: colors.primary}}>
-            {goal.description}
-          </Text>
+      {item.majorGoals.length > 0 && (
+        <View style={styles.goalContainer}>
+          <Text style={{...styles.h3, color: colors.primary}}>Major Goals</Text>
+          <View style={styles.listContainer}>
+            {item.majorGoals.map((goal, index) => (
+              <View key={index} style={{...styles.row, flexWrap: 'nowrap'}}>
+                <Checkbox
+                  status={majorChecked[index] ? 'checked' : 'unchecked'}
+                  disabled={!!item.majorGoals[index].completed}
+                  onPress={() => {
+                    let newArr = [...majorChecked];
+                    newArr[index] = !newArr[index];
+                    setMajorChecked(newArr);
+                  }}
+                />
+                <Text style={{...styles.text, color: colors.primary}}>
+                  {goal.description}
+                </Text>
+              </View>
+            ))}
+          </View>
         </View>
-      ))}
+      )}
 
       {/* Quest Flavor */}
-      <Text style={{...styles.h3, color: colors.primary}}>Quest Flavor</Text>
-      {item.questFlavor.map((goal, index) => (
-        <View key={index} style={{...styles.row, flexWrap: 'nowrap'}}>
-          <Checkbox
-            status={flavorChecked[index] ? 'checked' : 'unchecked'}
-            onPress={() => {
-              let newArr = [...flavorChecked];
-              newArr[index] = !newArr[index];
-              setFlavorChecked(newArr);
-            }}
-          />
-          <Text style={{...styles.text, color: colors.primary}}>
-            {goal.description}
+      {item.questFlavor.length > 0 && (
+        <View style={styles.goalContainer}>
+          <Text style={{...styles.h3, color: colors.primary}}>
+            Quest Flavor
           </Text>
+          <View style={styles.listContainer}>
+            {item.questFlavor.map((goal, index) => (
+              <View key={index} style={styles.row}>
+                <Checkbox
+                  status={flavorChecked[index] ? 'checked' : 'unchecked'}
+                  onPress={() => {
+                    let newArr = [...flavorChecked];
+                    newArr[index] = !newArr[index];
+                    setFlavorChecked(newArr);
+                  }}
+                />
+                <Text style={{...styles.text, color: colors.primary}}>
+                  {goal.description}
+                </Text>
+              </View>
+            ))}
+          </View>
         </View>
-      ))}
+      )}
     </View>
   );
 };
@@ -78,19 +92,17 @@ const ActiveQuest = ({item}: {item: activeQuest}) => {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    flex: 1,
     padding: 10,
     margin: 5,
     borderRadius: 15,
     flexBasis: 300,
+    flexGrow: 1,
+  },
+  listContainer: {
+    alignItems: 'flex-start',
   },
   goalContainer: {
-    alignItems: 'flex-start',
-    justifyContent: 'flex-start',
-    flex: 0,
-    padding: 10,
-    margin: 5,
-    borderRadius: 15,
+    alignItems: 'center',
   },
   header: {
     padding: 5,
