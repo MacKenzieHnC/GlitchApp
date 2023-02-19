@@ -5,7 +5,7 @@ import {StyleSheet} from 'react-native-windows';
 import {useSelector} from 'react-redux';
 import {getPreferences} from '../utils/store/appSlice';
 import {activeQuest} from '../utils/types';
-import LoadScreen from './LoadScreen';
+import LoadScreen from '../Screens/LoadScreen';
 
 const ActiveQuest = ({item}: {item: activeQuest}) => {
   const {colors} = useTheme();

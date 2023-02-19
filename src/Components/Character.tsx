@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {Alert, TouchableOpacity, View} from 'react-native';
 import {StyleSheet} from 'react-native-windows';
 import {character, costs, flavor, housekeeping, stats} from '../utils/types';
-import LoadScreen from './LoadScreen';
+import LoadScreen from '../Screens/LoadScreen';
 import {capitalize, detectChanges, getPropFromPath} from '../utils/utils';
 import {saveCharacter} from '../utils/db-service';
 import {useSelector} from 'react-redux';
