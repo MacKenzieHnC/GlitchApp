@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {forwardRef, Ref, useImperativeHandle, useState} from 'react';
 import {Alert, TouchableOpacity, View} from 'react-native';
 import {StyleSheet} from 'react-native-windows';
 import {character, costs, flavor, housekeeping, stats} from '../utils/types';
@@ -12,7 +12,7 @@ import Gift from './Gift';
 import ActiveQuest from './ActiveQuest';
 import {Table, TD, TR} from '@mackenziehnc/table';
 
-const Character = ({initial}: {initial: character}) => {
+const Character = ({initial}: {initial: character}, ref) => {
   const {colors} = useTheme();
   // Load
   const [chara, setChara] = useState(initial);
@@ -21,6 +21,12 @@ const Character = ({initial}: {initial: character}) => {
   if (!chara || !preferences) {
     return <LoadScreen />;
   }
+
+  useImperativeHandle(ref, () => ({
+    hasUnsavedChanges: () => {
+      return detectChanges(lastSaved, chara).length > 0;
+    },
+  }));
 
   // Save
   const onSave = () => {
@@ -305,4 +311,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Character;
+export default forwardRef(Character);

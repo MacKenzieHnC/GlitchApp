@@ -1,13 +1,11 @@
 import {Table, TD, TR} from '@mackenziehnc/table';
-import React from 'react';
+import React, {forwardRef, useImperativeHandle, useRef} from 'react';
 import {useState, useEffect} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
-import {IconButton, Text, useTheme, Switch} from 'react-native-paper';
+import {Text, useTheme, Switch} from 'react-native-paper';
 import {useDispatch, useSelector} from 'react-redux';
 import Character from '../Components/Character';
 import LoadScreen from './LoadScreen';
-import Modal from '../Components/Modal';
-import Options from '../Components/Options';
 import {getCharacters} from '../utils/db-service';
 import {getPreferences, preferencesChanged} from '../utils/store/appSlice';
 import {character} from '../utils/types';
@@ -67,7 +65,7 @@ export const CharacterOptions = () => {
   );
 };
 
-export default function CharacterScreen() {
+const CharacterScreen = (props, ref) => {
   const {colors} = useTheme();
 
   // Load characters
@@ -78,6 +76,24 @@ export default function CharacterScreen() {
       setCharacters(c);
     })();
   }, []);
+  const childRef = useRef([]);
+
+  useEffect(() => {
+    if (characters) {
+      childRef.current = childRef.current.slice(0, characters.length);
+    }
+  }, [characters]);
+
+  useImperativeHandle(ref, () => ({
+    hasUnsavedChanges: () => {
+      for (let i = 0; i < childRef.current.length; i++) {
+        if (childRef.current[i].hasUnsavedChanges()) {
+          return true;
+        }
+      }
+      return false;
+    },
+  }));
 
   // Await load characters
   if (!characters) {
@@ -88,13 +104,17 @@ export default function CharacterScreen() {
   return (
     <View style={{...styles.container, backgroundColor: colors.background}}>
       <ScrollView contentContainerStyle={styles.scrollview}>
-        {characters.map(c => (
-          <Character key={c.key} initial={c} />
+        {characters.map((c, index) => (
+          <Character
+            key={c.key}
+            initial={c}
+            ref={el => (childRef.current[index] = el)}
+          />
         ))}
       </ScrollView>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {flex: 1},
@@ -102,3 +122,5 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
 });
+
+export default forwardRef(CharacterScreen);

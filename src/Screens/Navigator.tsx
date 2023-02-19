@@ -1,5 +1,5 @@
-import React, {ReactElement, useState} from 'react';
-import {Text, View} from 'react-native';
+import React, {ReactElement, useEffect, useRef, useState} from 'react';
+import {Alert, Text, View} from 'react-native';
 import {Button, IconButton, useTheme} from 'react-native-paper';
 import {StyleSheet} from 'react-native-windows';
 import Modal from '../Components/Modal';
@@ -8,7 +8,7 @@ import CharacterScreen, {CharacterOptions} from './CharacterScreen';
 
 interface Screen {
   name: string;
-  screen: ReactElement;
+  screen: any;
   options: ReactElement;
 }
 
@@ -16,36 +16,21 @@ const Drawer = () => {
   const {colors} = useTheme();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [optionsOpen, setOptionsOpen] = useState(false);
+
+  const childRef = useRef();
   const screens: Screen[] = [
     {
       name: 'Characters',
-      screen: <CharacterScreen />,
+      screen: CharacterScreen,
       options: <CharacterOptions />,
     },
     {
       name: 'Welcome',
-      screen: (
-        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-          <Text style={{color: colors.primary}}>Welcome</Text>
-        </View>
-      ),
+      screen: View,
       options: <View />,
     },
   ];
   const [selectedScreen, setSelectedScreen] = useState(screens[0]);
-  const menu = (
-    <View>
-      {screens.map(screen => (
-        <Button
-          onPress={() => {
-            setSelectedScreen(screen);
-            setDrawerOpen(false);
-          }}>
-          <Text>{screen.name}</Text>
-        </Button>
-      ))}
-    </View>
-  );
 
   return (
     <View style={{flex: 1}}>
@@ -82,8 +67,27 @@ const Drawer = () => {
           flex: 1,
           flexDirection: 'row',
         }}>
-        {drawerOpen && menu}
-        {selectedScreen.screen}
+        {drawerOpen && (
+          <View>
+            {screens.map((screen, i) => (
+              <Button
+                onPress={() => {
+                  if (
+                    !childRef.current.hasUnsavedChanges ||
+                    !childRef.current.hasUnsavedChanges()
+                  ) {
+                    setSelectedScreen(screen);
+                    setDrawerOpen(false);
+                  } else {
+                    Alert.alert('Unsaved changes detected!');
+                  }
+                }}>
+                <Text>{screen.name}</Text>
+              </Button>
+            ))}
+          </View>
+        )}
+        <selectedScreen.screen ref={childRef} />
       </View>
     </View>
   );
