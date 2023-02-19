@@ -1,13 +1,13 @@
+import {Table, TD, TR} from '@mackenziehnc/table';
 import React from 'react';
 import {useState, useEffect} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
-import {Checkbox, IconButton, Text, useTheme, Switch} from 'react-native-paper';
+import {IconButton, Text, useTheme, Switch} from 'react-native-paper';
 import {useDispatch, useSelector} from 'react-redux';
 import Character from '../Components/Character';
 import LoadScreen from '../Components/LoadScreen';
 import Modal from '../Components/Modal';
 import Options from '../Components/Options';
-import Table from '../Components/Table';
 import {getCharacters} from '../utils/db-service';
 import {getPreferences, preferencesChanged} from '../utils/store/appSlice';
 import {character} from '../utils/types';
@@ -56,30 +56,33 @@ export default function CharacterScreen() {
             <Text>Descriptions</Text>
           </View>
           <Text style={styles.h2}>Characteristics</Text>
-          <Table
-            rowStyle={{justifyContent: 'center'}}
-            data={Object.keys(preferences.characteristics).map(key => ({
-              name: (
-                <Switch
-                  style={styles.switch}
-                  value={preferences.characteristics[key]}
-                  onValueChange={() => {
-                    dispatch(
-                      preferencesChanged({
-                        ...preferences,
-                        characteristics: {
-                          ...preferences.characteristics,
-                          [key]: !preferences.characteristics[key],
-                        },
-                      }),
-                    );
-                    return;
-                  }}
-                />
-              ),
-              value: <Text>{capitalize(key)}</Text>,
-            }))}
-          />
+          <Table>
+            {Object.keys(preferences.characteristics).map(key => (
+              <TR>
+                <TD>
+                  <Switch
+                    style={styles.switch}
+                    value={preferences.characteristics[key]}
+                    onValueChange={() => {
+                      dispatch(
+                        preferencesChanged({
+                          ...preferences,
+                          characteristics: {
+                            ...preferences.characteristics,
+                            [key]: !preferences.characteristics[key],
+                          },
+                        }),
+                      );
+                      return;
+                    }}
+                  />
+                </TD>
+                <TD>
+                  <Text>{capitalize(key)}</Text>
+                </TD>
+              </TR>
+            ))}
+          </Table>
         </Options>
       </Modal>
       <View

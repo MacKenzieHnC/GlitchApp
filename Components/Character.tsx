@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import {Alert, TouchableOpacity, View} from 'react-native';
 import {StyleSheet} from 'react-native-windows';
 import {character, costs, flavor, housekeeping, stats} from '../utils/types';
-import Table from './Table';
 import LoadScreen from './LoadScreen';
 import {capitalize, detectChanges, getPropFromPath} from '../utils/utils';
 import {saveCharacter} from '../utils/db-service';
@@ -11,6 +10,7 @@ import {getPreferences} from '../utils/store/appSlice';
 import {Text, useTheme} from 'react-native-paper';
 import Gift from './Gift';
 import ActiveQuest from './ActiveQuest';
+import {Table, TD, TR} from '@mackenziehnc/table';
 
 const Character = ({initial}: {initial: character}) => {
   const {colors} = useTheme();
@@ -46,36 +46,6 @@ const Character = ({initial}: {initial: character}) => {
       Alert.alert('No changes detected!');
     }
   };
-
-  const flavorData = Object.keys(chara.flavor)
-    .map(key => ({
-      name: (
-        <Text style={{...styles.listItem, color: colors.primary}}>
-          {capitalize(key)}:
-        </Text>
-      ),
-      value: (
-        <Text style={{...styles.listItem, color: colors.primary}}>
-          {chara.flavor[key as keyof flavor]}
-        </Text>
-      ),
-    }))
-    .concat(
-      Object.keys(chara.housekeeping)
-        .filter(x => chara.housekeeping[x as keyof housekeeping].length > 0)
-        .map(key => ({
-          name: (
-            <Text style={{...styles.listItem, color: colors.primary}}>
-              {capitalize(key)}:
-            </Text>
-          ),
-          value: (
-            <Text style={{...styles.listItem, color: colors.primary}}>
-              {chara.housekeeping[key as keyof housekeeping].join('\n')}
-            </Text>
-          ),
-        })),
-    );
 
   // Component
   return (
@@ -124,11 +94,38 @@ const Character = ({initial}: {initial: character}) => {
       {preferences.characteristics.flavor && (
         <View style={styles.innerContainer}>
           <Text style={{...styles.h2, color: colors.primary}}>Flavor</Text>
-          <Table
-            priviledge={[true, false]}
-            rowStyle={{flexShrink: 1}}
-            data={flavorData}
-          />
+          <Table priviledgedColumns={[0]}>
+            {Object.keys(chara.flavor)
+              .map(key => ({
+                name: capitalize(key),
+                value: chara.flavor[key as keyof flavor],
+              }))
+              .concat(
+                Object.keys(chara.housekeeping)
+                  .filter(
+                    x => chara.housekeeping[x as keyof housekeeping].length > 0,
+                  )
+                  .map(key => ({
+                    name: capitalize(key),
+                    value:
+                      chara.housekeeping[key as keyof housekeeping].join('\n'),
+                  })),
+              )
+              .map(row => (
+                <TR>
+                  <TD>
+                    <Text style={{...styles.listItem, color: colors.primary}}>
+                      {row.name}
+                    </Text>
+                  </TD>
+                  <TD>
+                    <Text style={{...styles.listItem, color: colors.primary}}>
+                      {row.value}
+                    </Text>
+                  </TD>
+                </TR>
+              ))}
+          </Table>
         </View>
       )}
 
@@ -147,26 +144,26 @@ const Character = ({initial}: {initial: character}) => {
         {preferences.characteristics.stats && (
           <View style={styles.innerContainer}>
             <Text style={{...styles.h2, color: colors.primary}}>Stats</Text>
-            <Table
-              priviledge={[true, false]}
-              data={Object.keys(chara.stats).map(key => ({
-                name: (
-                  <Text style={{...styles.listItem, color: colors.primary}}>
-                    {capitalize(key)}:
-                  </Text>
-                ),
-                value: (
-                  <Text
-                    style={{
-                      ...styles.numericListItem,
-                      color: colors.primary,
-                    }}>
-                    {chara.stats[key as keyof stats]}
-                  </Text>
-                ),
-              }))}
-              rowStyle={undefined}
-            />
+            <Table priviledgedColumns={[0]}>
+              {Object.keys(chara.stats).map(key => (
+                <TR>
+                  <TD>
+                    <Text style={{...styles.listItem, color: colors.primary}}>
+                      {capitalize(key)}:
+                    </Text>
+                  </TD>
+                  <TD>
+                    <Text
+                      style={{
+                        ...styles.numericListItem,
+                        color: colors.primary,
+                      }}>
+                      {chara.stats[key as keyof stats]}
+                    </Text>
+                  </TD>
+                </TR>
+              ))}
+            </Table>
           </View>
         )}
 
@@ -174,66 +171,66 @@ const Character = ({initial}: {initial: character}) => {
         {preferences.characteristics.costs && (
           <View style={styles.innerContainer}>
             <Text style={{...styles.h2, color: colors.primary}}>Costs</Text>
-            <Table
-              rowStyle={{justifyContent: 'center'}}
-              priviledge={[true, false]}
-              data={Object.keys(chara.costs).map(key => ({
-                backButton: (
-                  <TouchableOpacity
-                    style={{backgroundColor: colors.primaryContainer}}
-                    onPress={() =>
-                      setChara({
-                        ...chara,
-                        costs: {
-                          ...chara.costs,
-                          [key]:
-                            chara.costs[key as keyof costs] === 0
-                              ? chara.costs[key as keyof costs]
-                              : chara.costs[key as keyof costs] - 1,
-                        },
-                      })
-                    }>
-                    <Text style={{...styles.button, color: colors.primary}}>
-                      {'<'}
+            <Table priviledgedColumns={[0, 1, 2, 3]}>
+              {Object.keys(chara.costs).map(key => (
+                <TR>
+                  <TD>
+                    <TouchableOpacity
+                      style={{backgroundColor: colors.primaryContainer}}
+                      onPress={() =>
+                        setChara({
+                          ...chara,
+                          costs: {
+                            ...chara.costs,
+                            [key]:
+                              chara.costs[key as keyof costs] === 0
+                                ? chara.costs[key as keyof costs]
+                                : chara.costs[key as keyof costs] - 1,
+                          },
+                        })
+                      }>
+                      <Text style={{...styles.button, color: colors.primary}}>
+                        {'<'}
+                      </Text>
+                    </TouchableOpacity>
+                  </TD>
+                  <TD>
+                    <Text style={{...styles.listItem, color: colors.primary}}>
+                      {capitalize(key)}:
                     </Text>
-                  </TouchableOpacity>
-                ),
-                name: (
-                  <Text style={{...styles.listItem, color: colors.primary}}>
-                    {capitalize(key)}:
-                  </Text>
-                ),
-                value: (
-                  <Text
-                    style={{
-                      ...styles.numericListItem,
-                      color: colors.primary,
-                    }}>
-                    {chara.costs[key as keyof costs]}
-                  </Text>
-                ),
-                forwardButton: (
-                  <TouchableOpacity
-                    style={{backgroundColor: colors.primaryContainer}}
-                    onPress={() =>
-                      setChara({
-                        ...chara,
-                        costs: {
-                          ...chara.costs,
-                          [key]:
-                            chara.costs[key as keyof costs] === 108
-                              ? chara.costs[key as keyof costs]
-                              : chara.costs[key as keyof costs] + 1,
-                        },
-                      })
-                    }>
-                    <Text style={{...styles.button, color: colors.primary}}>
-                      {'>'}
+                  </TD>
+                  <TD>
+                    <Text
+                      style={{
+                        ...styles.numericListItem,
+                        color: colors.primary,
+                      }}>
+                      {chara.costs[key as keyof costs]}
                     </Text>
-                  </TouchableOpacity>
-                ),
-              }))}
-            />
+                  </TD>
+                  <TD>
+                    <TouchableOpacity
+                      style={{backgroundColor: colors.primaryContainer}}
+                      onPress={() =>
+                        setChara({
+                          ...chara,
+                          costs: {
+                            ...chara.costs,
+                            [key]:
+                              chara.costs[key as keyof costs] === 108
+                                ? chara.costs[key as keyof costs]
+                                : chara.costs[key as keyof costs] + 1,
+                          },
+                        })
+                      }>
+                      <Text style={{...styles.button, color: colors.primary}}>
+                        {'>'}
+                      </Text>
+                    </TouchableOpacity>
+                  </TD>
+                </TR>
+              ))}
+            </Table>
           </View>
         )}
       </View>
