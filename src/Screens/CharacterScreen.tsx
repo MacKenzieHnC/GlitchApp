@@ -1,12 +1,12 @@
 import {Table, TD, TR} from '@mackenziehnc/table';
 import React, {forwardRef, useImperativeHandle, useRef} from 'react';
 import {useState, useEffect} from 'react';
-import {ScrollView, TouchableOpacity, View} from 'react-native';
+import {Alert, ScrollView, TouchableOpacity, View} from 'react-native';
 import {Text, useTheme, Switch} from 'react-native-paper';
 import {useDispatch, useSelector} from 'react-redux';
 import Character from '../Components/Characters/Character';
 import LoadScreen from './LoadScreen';
-import {getCharacters} from '../utils/db-service';
+import {getCharacters, getDBConnection} from '../utils/db-service';
 import {getPreferences, preferencesChanged} from '../utils/store/appSlice';
 import {character} from '../utils/types';
 import {capitalize} from '../utils/utils';
@@ -15,7 +15,6 @@ import styles from '../utils/styles';
 export const CharacterOptions = () => {
   const {preferences} = useSelector(getPreferences);
   const dispatch = useDispatch();
-  const {colors} = useTheme();
 
   return (
     <View>
@@ -102,7 +101,26 @@ const CharacterScreen = (props, ref) => {
         return null;
       }
     },
+    save: () => {
+      save();
+    },
   }));
+
+  const save = async () => {
+    const db = await getDBConnection();
+    try {
+      childRef.current.forEach(child => {
+        if (child.hasUnsavedChanges()) {
+          child.save(db);
+        }
+      });
+    } catch (error) {
+      throw Error('Failed to save characters: ' + error);
+    } finally {
+      db.close();
+      Alert.alert('Save successful');
+    }
+  };
 
   // Await load characters
   if (!characters) {
@@ -114,7 +132,7 @@ const CharacterScreen = (props, ref) => {
     <View style={{...styles.container, backgroundColor: colors.background}}>
       <TouchableOpacity
         style={{backgroundColor: colors.primaryContainer}}
-        onPress={() => console.log('I am pretending to save')}>
+        onPress={save}>
         <Text style={{...styles.button, color: colors.primary}}>SAVE</Text>
       </TouchableOpacity>
       <ScrollView contentContainerStyle={styles.scrollview}>

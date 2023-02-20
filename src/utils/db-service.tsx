@@ -307,24 +307,42 @@ export const getQuestFlavor = async (
  * @param id The row id for the character we're changing
  * @param changes The list of changed props
  */
-export const saveCharacter = async (id: number, changes: any) => {
-  const db = await getDBConnection();
-
+export const saveCharacterWithDB = async (
+  db: SQLiteDatabase,
+  id: number,
+  changes: any,
+) => {
   // Build the update section of the query
   var changeStr = '';
-  Object.keys(changes).forEach(
-    key => (changeStr += `${key} = ${changes[key]}, `),
-  );
+  Object.keys(changes).forEach(key => {
+    changeStr += `${key} = ${changes[key]}, `;
+  });
   changeStr = changeStr.slice(0, changeStr.length - 2); // Remove trailing comma and space
 
   try {
     // Build the query
     const query = `UPDATE Characters
-    SET ${changeStr}
-    WHERE id = ${id};`;
+                      SET ${changeStr}
+                      WHERE id = ${id};`;
 
     // Execute the query
     await db.executeSql(query);
+  } catch (error) {
+    throw Error('Failed to set character: ' + error);
+  }
+};
+
+/**
+ * Save character changes to the database
+ *
+ * @param id The row id for the character we're changing
+ * @param changes The list of changed props
+ */
+export const saveCharacter = async (id: number, changes: any) => {
+  const db = await getDBConnection();
+
+  try {
+    await saveCharacterWithDB(db, id, changes);
   } catch (error) {
     throw Error('Failed to set character: ' + error);
   } finally {

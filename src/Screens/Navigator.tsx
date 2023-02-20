@@ -1,9 +1,9 @@
 import React, {ReactElement, useRef, useState} from 'react';
-import {Alert, ScrollView, Text, View} from 'react-native';
-import AwesomeAlert from 'react-native-awesome-alerts';
+import {ScrollView, Text, View} from 'react-native';
 import {Button, IconButton, useTheme} from 'react-native-paper';
 import Modal from '../Components/Modal';
 import Options from '../Components/Options';
+import {useDeferredPromise} from '../utils/DeferredPromise';
 import styles from '../utils/styles';
 import CharacterScreen, {CharacterOptions} from './CharacterScreen';
 
@@ -34,18 +34,27 @@ const Drawer = () => {
   const [selectedScreen, setSelectedScreen] = useState(screens[0]);
   const [saveModalVisible, setSaveModalVisible] = useState(false);
   const [saveModalContent, setSaveModalContent] = useState();
+  const {defer, deferRef} = useDeferredPromise<'save' | 'discard' | 'cancel'>();
 
-  const handleNavigation = screen => {
+  const handleNavigation = async (screen: Screen) => {
     if (
-      childRef.current.hasUnsavedChanges &&
-      childRef.current.hasUnsavedChanges()
+      childRef.current?.hasUnsavedChanges &&
+      childRef.current?.hasUnsavedChanges()
     ) {
       setSaveModalVisible(true);
       setSaveModalContent(childRef.current.hasUnsavedChanges());
+      const value = await defer().promise;
+      setSaveModalVisible(false);
+      if (value === 'save') {
+        await childRef.current.save();
+        setSelectedScreen(screen);
+      } else if (value === 'discard') {
+        setSelectedScreen(screen);
+      }
     } else {
       setSelectedScreen(screen);
-      setDrawerOpen(false);
     }
+    setDrawerOpen(false);
   };
 
   const SaveModal = () => {
@@ -74,6 +83,17 @@ const Drawer = () => {
             <ScrollView style={{flexGrow: 0}} nestedScrollEnabled={true}>
               {saveModalContent}
             </ScrollView>
+          </View>
+          <View style={styles.row}>
+            <Button onPress={() => deferRef.resolve('cancel')}>
+              <Text>Cancel</Text>
+            </Button>
+            <Button onPress={() => deferRef.resolve('discard')}>
+              <Text>Discard changes</Text>
+            </Button>
+            <Button onPress={() => deferRef.resolve('save')}>
+              <Text>Save</Text>
+            </Button>
           </View>
         </View>
       </Modal>

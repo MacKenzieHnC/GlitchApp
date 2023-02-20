@@ -1,9 +1,9 @@
 import React, {forwardRef, useImperativeHandle, useState} from 'react';
-import {Alert, TouchableOpacity, View} from 'react-native';
+import {TouchableOpacity, View} from 'react-native';
 import {character, costs, flavor, housekeeping, stats} from '../../utils/types';
 import LoadScreen from '../../Screens/LoadScreen';
 import {capitalize, detectChanges, getPropFromPath} from '../../utils/utils';
-import {saveCharacter} from '../../utils/db-service';
+import {saveCharacterWithDB} from '../../utils/db-service';
 import {useSelector} from 'react-redux';
 import {getPreferences} from '../../utils/store/appSlice';
 import {Text, useTheme} from 'react-native-paper';
@@ -12,6 +12,7 @@ import ActiveQuest from '../ActiveQuest';
 import {Table, TD, TR} from '@mackenziehnc/table';
 import styles from '../../utils/styles';
 import CharacterChanges from './CharacterChanges';
+import {SQLiteDatabase} from 'react-native-sqlite-storage';
 
 const Character = ({initial}: {initial: character}, ref) => {
   const {colors} = useTheme();
@@ -23,6 +24,17 @@ const Character = ({initial}: {initial: character}, ref) => {
   useImperativeHandle(ref, () => ({
     hasUnsavedChanges: () => {
       return CharacterChanges({initial: lastSaved, current: chara});
+    },
+    save: (db: SQLiteDatabase) => {
+      const changes = {};
+      detectChanges(lastSaved, chara).forEach(change => {
+        const key = change[change.length - 1];
+        changes[key] = getPropFromPath(chara, change);
+      });
+      if (Object.keys(changes).length > 0) {
+        saveCharacterWithDB(db, chara.key, changes);
+        setLastSaved(chara);
+      }
     },
   }));
 
