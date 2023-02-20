@@ -18,7 +18,7 @@ const Drawer = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [optionsOpen, setOptionsOpen] = useState(false);
 
-  const childRef = useRef();
+  const childRef = useRef<any>();
   const screens: Screen[] = [
     {
       name: 'Characters',
@@ -85,13 +85,13 @@ const Drawer = () => {
             </ScrollView>
           </View>
           <View style={styles.row}>
-            <Button onPress={() => deferRef.resolve('cancel')}>
+            <Button onPress={() => deferRef?.resolve('cancel')}>
               <Text>Cancel</Text>
             </Button>
-            <Button onPress={() => deferRef.resolve('discard')}>
+            <Button onPress={() => deferRef?.resolve('discard')}>
               <Text>Discard changes</Text>
             </Button>
-            <Button onPress={() => deferRef.resolve('save')}>
+            <Button onPress={() => deferRef?.resolve('save')}>
               <Text>Save</Text>
             </Button>
           </View>

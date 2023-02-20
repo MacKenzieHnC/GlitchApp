@@ -14,7 +14,7 @@ import styles from '../../utils/styles';
 import CharacterChanges from './CharacterChanges';
 import {SQLiteDatabase} from 'react-native-sqlite-storage';
 
-const Character = ({initial}: {initial: character}, ref) => {
+const Character = ({initial}: {initial: character}, ref: any) => {
   const {colors} = useTheme();
   // Load
   const [chara, setChara] = useState(initial);
@@ -26,7 +26,7 @@ const Character = ({initial}: {initial: character}, ref) => {
       return CharacterChanges({initial: lastSaved, current: chara});
     },
     save: (db: SQLiteDatabase) => {
-      const changes = {};
+      const changes: any = {};
       detectChanges(lastSaved, chara).forEach(change => {
         const key = change[change.length - 1];
         changes[key] = getPropFromPath(chara, change);

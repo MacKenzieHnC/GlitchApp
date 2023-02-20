@@ -19,7 +19,7 @@ export const CharacterOptions = () => {
   return (
     <View>
       <Text style={styles.h2}>General</Text>
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+      <View style={styles.row}>
         <Switch
           value={preferences.descriptions}
           style={styles.switch}
@@ -67,7 +67,7 @@ export const CharacterOptions = () => {
   );
 };
 
-const CharacterScreen = (props, ref) => {
+const CharacterScreen = (_props: any, ref: any) => {
   const {colors} = useTheme();
 
   // Load characters
@@ -78,7 +78,7 @@ const CharacterScreen = (props, ref) => {
       setCharacters(c);
     })();
   }, []);
-  const childRef = useRef([]);
+  const childRef = useRef<any>([]);
 
   useEffect(() => {
     if (characters) {
@@ -88,8 +88,8 @@ const CharacterScreen = (props, ref) => {
 
   useImperativeHandle(ref, () => ({
     hasUnsavedChanges: () => {
-      let changes = [];
-      childRef.current.forEach(child => {
+      let changes: any = [];
+      childRef.current.forEach((child: any) => {
         const change = child.hasUnsavedChanges();
         if (change) {
           changes.push(change);
@@ -109,7 +109,7 @@ const CharacterScreen = (props, ref) => {
   const save = async () => {
     const db = await getDBConnection();
     try {
-      childRef.current.forEach(child => {
+      childRef.current.forEach((child: any) => {
         if (child.hasUnsavedChanges()) {
           child.save(db);
         }
