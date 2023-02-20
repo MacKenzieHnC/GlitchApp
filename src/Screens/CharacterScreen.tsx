@@ -1,19 +1,22 @@
 import {Table, TD, TR} from '@mackenziehnc/table';
 import React, {forwardRef, useImperativeHandle, useRef} from 'react';
 import {useState, useEffect} from 'react';
-import {ScrollView, StyleSheet, View} from 'react-native';
+import {ScrollView, TouchableOpacity, View} from 'react-native';
 import {Text, useTheme, Switch} from 'react-native-paper';
 import {useDispatch, useSelector} from 'react-redux';
-import Character from '../Components/Character';
+import Character from '../Components/Characters/Character';
 import LoadScreen from './LoadScreen';
 import {getCharacters} from '../utils/db-service';
 import {getPreferences, preferencesChanged} from '../utils/store/appSlice';
 import {character} from '../utils/types';
 import {capitalize} from '../utils/utils';
+import styles from '../utils/styles';
 
 export const CharacterOptions = () => {
   const {preferences} = useSelector(getPreferences);
   const dispatch = useDispatch();
+  const {colors} = useTheme();
+
   return (
     <View>
       <Text style={styles.h2}>General</Text>
@@ -86,12 +89,18 @@ const CharacterScreen = (props, ref) => {
 
   useImperativeHandle(ref, () => ({
     hasUnsavedChanges: () => {
-      for (let i = 0; i < childRef.current.length; i++) {
-        if (childRef.current[i].hasUnsavedChanges()) {
-          return true;
+      let changes = [];
+      childRef.current.forEach(child => {
+        const change = child.hasUnsavedChanges();
+        if (change) {
+          changes.push(change);
         }
+      });
+      if (changes.length > 0) {
+        return <View>{changes}</View>;
+      } else {
+        return null;
       }
-      return false;
     },
   }));
 
@@ -103,6 +112,11 @@ const CharacterScreen = (props, ref) => {
   // Component
   return (
     <View style={{...styles.container, backgroundColor: colors.background}}>
+      <TouchableOpacity
+        style={{backgroundColor: colors.primaryContainer}}
+        onPress={() => console.log('I am pretending to save')}>
+        <Text style={{...styles.button, color: colors.primary}}>SAVE</Text>
+      </TouchableOpacity>
       <ScrollView contentContainerStyle={styles.scrollview}>
         {characters.map((c, index) => (
           <Character
@@ -115,12 +129,5 @@ const CharacterScreen = (props, ref) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {flex: 1},
-  scrollview: {
-    flexGrow: 1,
-  },
-});
 
 export default forwardRef(CharacterScreen);

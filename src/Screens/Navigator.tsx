@@ -1,9 +1,10 @@
-import React, {ReactElement, useEffect, useRef, useState} from 'react';
-import {Alert, Text, View} from 'react-native';
+import React, {ReactElement, useRef, useState} from 'react';
+import {Alert, ScrollView, Text, View} from 'react-native';
+import AwesomeAlert from 'react-native-awesome-alerts';
 import {Button, IconButton, useTheme} from 'react-native-paper';
-import {StyleSheet} from 'react-native-windows';
 import Modal from '../Components/Modal';
 import Options from '../Components/Options';
+import styles from '../utils/styles';
 import CharacterScreen, {CharacterOptions} from './CharacterScreen';
 
 interface Screen {
@@ -31,9 +32,57 @@ const Drawer = () => {
     },
   ];
   const [selectedScreen, setSelectedScreen] = useState(screens[0]);
+  const [saveModalVisible, setSaveModalVisible] = useState(false);
+  const [saveModalContent, setSaveModalContent] = useState();
+
+  const handleNavigation = screen => {
+    if (
+      childRef.current.hasUnsavedChanges &&
+      childRef.current.hasUnsavedChanges()
+    ) {
+      setSaveModalVisible(true);
+      setSaveModalContent(childRef.current.hasUnsavedChanges());
+    } else {
+      setSelectedScreen(screen);
+      setDrawerOpen(false);
+    }
+  };
+
+  const SaveModal = () => {
+    return (
+      <Modal
+        isOpen={saveModalVisible}
+        onDismiss={() => setSaveModalVisible(false)}
+        style={{maxWidth: '75%'}}>
+        <View
+          style={{alignItems: 'center', backgroundColor: colors.background}}>
+          <View
+            style={{
+              ...styles.header,
+              backgroundColor: colors.primaryContainer,
+            }}>
+            <Text
+              style={{
+                ...styles.h1,
+                textAlign: 'center',
+                color: colors.primary,
+              }}>
+              Unsaved Changes
+            </Text>
+          </View>
+          <View style={{flexShrink: 1}}>
+            <ScrollView style={{flexGrow: 0}} nestedScrollEnabled={true}>
+              {saveModalContent}
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
+    );
+  };
 
   return (
     <View style={{flex: 1}}>
+      <SaveModal />
       <Modal isOpen={optionsOpen} onDismiss={() => setOptionsOpen(false)}>
         <Options>{selectedScreen.options}</Options>
       </Modal>
@@ -69,19 +118,10 @@ const Drawer = () => {
         }}>
         {drawerOpen && (
           <View>
-            {screens.map((screen, i) => (
+            {screens.map(screen => (
               <Button
-                onPress={() => {
-                  if (
-                    !childRef.current.hasUnsavedChanges ||
-                    !childRef.current.hasUnsavedChanges()
-                  ) {
-                    setSelectedScreen(screen);
-                    setDrawerOpen(false);
-                  } else {
-                    Alert.alert('Unsaved changes detected!');
-                  }
-                }}>
+                key={screen.name}
+                onPress={() => handleNavigation(screen)}>
                 <Text>{screen.name}</Text>
               </Button>
             ))}
@@ -92,34 +132,5 @@ const Drawer = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  loading: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  h1: {
-    textAlign: 'center',
-    textAlignVertical: 'center',
-    fontSize: 30,
-  },
-  h2: {
-    textAlign: 'center',
-    fontSize: 25,
-  },
-  switch: {
-    marginRight: -7,
-    marginTop: -5,
-    marginBottom: 5,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingLeft: 10,
-    borderBottomWidth: 1,
-  },
-});
 
 export default Drawer;

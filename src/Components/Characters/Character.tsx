@@ -1,16 +1,17 @@
-import React, {forwardRef, Ref, useImperativeHandle, useState} from 'react';
+import React, {forwardRef, useImperativeHandle, useState} from 'react';
 import {Alert, TouchableOpacity, View} from 'react-native';
-import {StyleSheet} from 'react-native-windows';
-import {character, costs, flavor, housekeeping, stats} from '../utils/types';
-import LoadScreen from '../Screens/LoadScreen';
-import {capitalize, detectChanges, getPropFromPath} from '../utils/utils';
-import {saveCharacter} from '../utils/db-service';
+import {character, costs, flavor, housekeeping, stats} from '../../utils/types';
+import LoadScreen from '../../Screens/LoadScreen';
+import {capitalize, detectChanges, getPropFromPath} from '../../utils/utils';
+import {saveCharacter} from '../../utils/db-service';
 import {useSelector} from 'react-redux';
-import {getPreferences} from '../utils/store/appSlice';
+import {getPreferences} from '../../utils/store/appSlice';
 import {Text, useTheme} from 'react-native-paper';
-import Gift from './Gift';
-import ActiveQuest from './ActiveQuest';
+import Gift from '../Gift';
+import ActiveQuest from '../ActiveQuest';
 import {Table, TD, TR} from '@mackenziehnc/table';
+import styles from '../../utils/styles';
+import CharacterChanges from './CharacterChanges';
 
 const Character = ({initial}: {initial: character}, ref) => {
   const {colors} = useTheme();
@@ -18,49 +19,20 @@ const Character = ({initial}: {initial: character}, ref) => {
   const [chara, setChara] = useState(initial);
   const [lastSaved, setLastSaved] = useState(initial);
   const {preferences} = useSelector(getPreferences);
+
+  useImperativeHandle(ref, () => ({
+    hasUnsavedChanges: () => {
+      return CharacterChanges({initial: lastSaved, current: chara});
+    },
+  }));
+
   if (!chara || !preferences) {
     return <LoadScreen />;
   }
 
-  useImperativeHandle(ref, () => ({
-    hasUnsavedChanges: () => {
-      return detectChanges(lastSaved, chara).length > 0;
-    },
-  }));
-
-  // Save
-  const onSave = () => {
-    const changes = detectChanges(lastSaved, chara);
-    var alertMessage = '';
-    if (changes.length > 0) {
-      var changeList = {}; // Object storing key/value pairs for changes (db is non-nested)
-      changes.forEach(change => {
-        const key = change[change.length - 1];
-        changeList[key] = getPropFromPath(chara, change)[key];
-        alertMessage +=
-          '\n' +
-          key +
-          ': ' +
-          getPropFromPath(lastSaved, change)[key] +
-          ' => ' +
-          getPropFromPath(chara, change)[key];
-      });
-      saveCharacter(chara.key, changeList); // Send changes to db
-      setLastSaved(JSON.parse(JSON.stringify(chara))); // Deep copy / store changes in state
-      Alert.alert('Save successful', alertMessage);
-    } else {
-      Alert.alert('No changes detected!');
-    }
-  };
-
   // Component
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        style={{backgroundColor: colors.primaryContainer}}
-        onPress={onSave}>
-        <Text style={{...styles.button, color: colors.primary}}>SAVE</Text>
-      </TouchableOpacity>
       {/* Name */}
       <Text style={{...styles.h1, color: colors.primary}}>
         {lastSaved.name}
@@ -118,7 +90,7 @@ const Character = ({initial}: {initial: character}, ref) => {
                   })),
               )
               .map(row => (
-                <TR>
+                <TR key={row.name}>
                   <TD>
                     <Text style={{...styles.listItem, color: colors.primary}}>
                       {row.name}
@@ -152,7 +124,7 @@ const Character = ({initial}: {initial: character}, ref) => {
             <Text style={{...styles.h2, color: colors.primary}}>Stats</Text>
             <Table priviledgedColumns={[0]}>
               {Object.keys(chara.stats).map(key => (
-                <TR>
+                <TR key={key}>
                   <TD>
                     <Text style={{...styles.listItem, color: colors.primary}}>
                       {capitalize(key)}:
@@ -179,7 +151,7 @@ const Character = ({initial}: {initial: character}, ref) => {
             <Text style={{...styles.h2, color: colors.primary}}>Costs</Text>
             <Table priviledgedColumns={[0, 1, 2, 3]}>
               {Object.keys(chara.costs).map(key => (
-                <TR>
+                <TR key={key}>
                   <TD>
                     <TouchableOpacity
                       style={{backgroundColor: colors.primaryContainer}}
@@ -252,63 +224,5 @@ const Character = ({initial}: {initial: character}, ref) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    alignContent: 'center',
-    justifyContent: 'center',
-    padding: 20,
-    flexBasis: 300,
-  },
-  innerContainer: {
-    alignItems: 'center',
-    alignContent: 'center',
-    justifyContent: 'center',
-    flex: 1,
-    flexBasis: 0,
-  },
-  h1: {
-    flex: 1,
-    textAlign: 'center',
-    fontSize: 30,
-  },
-  h2: {
-    flex: 1,
-    textAlign: 'center',
-    fontSize: 25,
-  },
-  h3: {
-    flex: 1,
-    textAlign: 'center',
-    fontSize: 20,
-  },
-  row: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-  },
-  listItem: {
-    padding: 5,
-    textAlignVertical: 'top',
-  },
-  numericListItem: {
-    padding: 5,
-    textAlign: 'right',
-  },
-  modal: {
-    alignItems: 'center',
-    alignContent: 'center',
-    justifyContent: 'center',
-    flex: 1,
-  },
-  button: {
-    paddingHorizontal: 10,
-    fontSize: 20,
-    textAlign: 'center',
-  },
-  textView: {
-    flex: 1,
-  },
-});
 
 export default forwardRef(Character);

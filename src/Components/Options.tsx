@@ -3,6 +3,7 @@ import {Text, View} from 'react-native';
 import {Switch, useTheme} from 'react-native-paper';
 import {StyleSheet} from 'react-native-windows';
 import {useDispatch, useSelector} from 'react-redux';
+import styles from '../utils/styles';
 import {getPreferences, preferencesChanged} from '../utils/store/appSlice';
 
 const Options = ({children}) => {
@@ -45,33 +46,5 @@ const Options = ({children}) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    borderRadius: 10,
-    borderWidth: 2,
-    minWidth: '50%',
-  },
-  header: {
-    alignItems: 'center',
-    padding: 10,
-    width: '100%',
-  },
-  h1: {
-    textAlign: 'center',
-    textAlignVertical: 'center',
-    fontSize: 30,
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  switch: {
-    marginRight: -7,
-    marginTop: -5,
-    marginBottom: 5,
-  },
-});
 
 export default Options;

@@ -16,7 +16,7 @@ const Gift = ({item}: {item: gift}) => {
       <Text style={{...styles.h3, color: colors.primary}}>{item.name}</Text>
       <Table priviledgedColumns={[0]}>
         {['cost', 'activation', 'aoe', 'flexibility'].map(key => (
-          <TR>
+          <TR key={key}>
             <TD>
               <Text style={{...styles.listItem, color: colors.primary}}>
                 {capitalize(key)}:

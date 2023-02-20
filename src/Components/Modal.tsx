@@ -1,7 +1,19 @@
 import React from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, TouchableOpacity, View, ViewStyle} from 'react-native';
 
-export default function Modal({children, isOpen, onDismiss}) {
+interface ModalProps {
+  children: any;
+  isOpen: boolean;
+  onDismiss: Function;
+  style?: ViewStyle;
+}
+
+export default function Modal({
+  children,
+  isOpen,
+  onDismiss,
+  style = {},
+}: ModalProps) {
   if (!isOpen) {
     return <View />;
   }
@@ -9,7 +21,7 @@ export default function Modal({children, isOpen, onDismiss}) {
   return (
     <View style={styles.modal}>
       <TouchableOpacity onPress={() => onDismiss()} style={styles.background} />
-      <View style={styles.content}>{children}</View>
+      <View style={{...style, ...styles.content}}>{children}</View>
     </View>
   );
 }
