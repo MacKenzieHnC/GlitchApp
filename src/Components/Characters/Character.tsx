@@ -229,7 +229,13 @@ const Character = ({initial}: {initial: character}, ref: any) => {
       {preferences.characteristics.quests && (
         <View style={styles.row}>
           {chara.quests.map((quest, index) => (
-            <ActiveQuest key={index} item={quest} />
+            <ActiveQuest
+              key={index}
+              item={quest}
+              incrementXP={(increase: number) =>
+                setChara({...chara, xp: chara.xp + increase})
+              }
+            />
           ))}
         </View>
       )}

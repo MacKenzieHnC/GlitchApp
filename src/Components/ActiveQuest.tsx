@@ -7,7 +7,12 @@ import {getPreferences} from '../utils/store/appSlice';
 import {activeQuest} from '../utils/types';
 import LoadScreen from '../Screens/LoadScreen';
 
-const ActiveQuest = ({item}: {item: activeQuest}) => {
+interface ActiveQuestProps {
+  item: activeQuest;
+  incrementXP: Function;
+}
+
+const ActiveQuest = ({item, incrementXP}: ActiveQuestProps) => {
   const {colors} = useTheme();
 
   const [majorChecked, setMajorChecked] = useState<boolean[]>(
@@ -46,6 +51,8 @@ const ActiveQuest = ({item}: {item: activeQuest}) => {
                   status={majorChecked[index] ? 'checked' : 'unchecked'}
                   disabled={!!item.majorGoals[index].completed}
                   onPress={() => {
+                    // Backwards because starts unchecked
+                    majorChecked[index] ? incrementXP(-5) : incrementXP(5);
                     let newArr = [...majorChecked];
                     newArr[index] = !newArr[index];
                     setMajorChecked(newArr);
@@ -72,6 +79,10 @@ const ActiveQuest = ({item}: {item: activeQuest}) => {
                 <Checkbox
                   status={flavorChecked[index] ? 'checked' : 'unchecked'}
                   onPress={() => {
+                    // Backwards because starts unchecked
+                    if (!flavorChecked[index]) {
+                      incrementXP(1);
+                    }
                     let newArr = [...flavorChecked];
                     newArr[index] = !newArr[index];
                     setFlavorChecked(newArr);
