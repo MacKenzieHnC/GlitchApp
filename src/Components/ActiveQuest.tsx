@@ -23,6 +23,7 @@ const ActiveQuest = ({item, incrementXP}: ActiveQuestProps) => {
     new Array(item.questFlavor.length).fill(false),
   );
   const {preferences} = useSelector(getPreferences);
+  const [earnedXP, setEarnedXP] = useState(item.earnedXP);
 
   if (!majorChecked || !flavorChecked) {
     return <LoadScreen />;
@@ -32,7 +33,7 @@ const ActiveQuest = ({item, incrementXP}: ActiveQuestProps) => {
       style={{...styles.container, backgroundColor: colors.primaryContainer}}>
       <Text style={{...styles.header, color: colors.primary}}>{item.name}</Text>
       <Text style={{color: colors.primary}}>
-        {item.earnedXP} / {item.neededXP}xp
+        {earnedXP} / {item.neededXP}xp
       </Text>
       {preferences.descriptions && (
         <View>
@@ -53,6 +54,9 @@ const ActiveQuest = ({item, incrementXP}: ActiveQuestProps) => {
                   onPress={() => {
                     // Backwards because starts unchecked
                     majorChecked[index] ? incrementXP(-5) : incrementXP(5);
+                    majorChecked[index]
+                      ? setEarnedXP(earnedXP - 5)
+                      : setEarnedXP(earnedXP + 5);
                     let newArr = [...majorChecked];
                     newArr[index] = !newArr[index];
                     setMajorChecked(newArr);
@@ -82,6 +86,7 @@ const ActiveQuest = ({item, incrementXP}: ActiveQuestProps) => {
                     // Backwards because starts unchecked
                     if (!flavorChecked[index]) {
                       incrementXP(1);
+                      setEarnedXP(earnedXP + 1);
                     }
                     let newArr = [...flavorChecked];
                     newArr[index] = !newArr[index];
