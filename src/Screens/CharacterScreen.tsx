@@ -38,7 +38,7 @@ export const CharacterOptions = () => {
       <Text style={styles.h2}>Characteristics</Text>
       <Table>
         {Object.keys(preferences.characteristics).map(key => (
-          <TR>
+          <TR key={key}>
             <TD>
               <Switch
                 style={styles.switch}
@@ -135,7 +135,7 @@ const CharacterScreen = (_props: any, ref: any) => {
         onPress={save}>
         <Text style={{...styles.button, color: colors.primary}}>SAVE</Text>
       </TouchableOpacity>
-      <ScrollView contentContainerStyle={styles.scrollview}>
+      <ScrollView contentContainerStyle={styles.scrollview} style={{flex: 1}}>
         {characters.map((c, index) => (
           <Character
             key={c.key}

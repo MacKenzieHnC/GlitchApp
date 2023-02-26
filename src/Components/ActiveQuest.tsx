@@ -24,6 +24,9 @@ const ActiveQuest = ({item, incrementXP}: ActiveQuestProps) => {
   );
   const {preferences} = useSelector(getPreferences);
   const [earnedXP, setEarnedXP] = useState(item.earnedXP);
+  const [flavorIncrementCount, setFlavorIncrementCount] = useState(
+    Array(item.questFlavor.length).fill(0),
+  );
 
   if (!majorChecked || !flavorChecked) {
     return <LoadScreen />;
@@ -35,6 +38,7 @@ const ActiveQuest = ({item, incrementXP}: ActiveQuestProps) => {
       <Text style={{color: colors.primary}}>
         {earnedXP} / {item.neededXP}xp
       </Text>
+      <Text>pg {item.pg}</Text>
       {preferences.descriptions && (
         <View>
           <Text style={{color: colors.primary}}>{item.description}</Text>
@@ -73,11 +77,11 @@ const ActiveQuest = ({item, incrementXP}: ActiveQuestProps) => {
 
       {/* Quest Flavor */}
       {item.questFlavor.length > 0 && (
-        <View style={styles.goalContainer}>
+        <View style={{...styles.goalContainer, alignItems: 'center'}}>
           <Text style={{...styles.h3, color: colors.primary}}>
             Quest Flavor
           </Text>
-          <View style={styles.listContainer}>
+          <View style={styles.goalContainer}>
             {item.questFlavor.map((goal, index) => (
               <View key={index} style={styles.row}>
                 <Checkbox
@@ -87,6 +91,9 @@ const ActiveQuest = ({item, incrementXP}: ActiveQuestProps) => {
                     if (!flavorChecked[index]) {
                       incrementXP(1);
                       setEarnedXP(earnedXP + 1);
+                      let newArr = flavorIncrementCount;
+                      newArr[index] += 1;
+                      setFlavorIncrementCount(newArr);
                     }
                     let newArr = [...flavorChecked];
                     newArr[index] = !newArr[index];
@@ -96,6 +103,16 @@ const ActiveQuest = ({item, incrementXP}: ActiveQuestProps) => {
                 <Text style={{...styles.text, color: colors.primary}}>
                   {goal.description}
                 </Text>
+                {flavorIncrementCount[index] > 0 && (
+                  <Text
+                    style={{
+                      ...styles.text,
+                      color: 'green',
+                      alignSelf: 'flex-end',
+                    }}>
+                    +{flavorIncrementCount[index]}
+                  </Text>
+                )}
               </View>
             ))}
           </View>
