@@ -65,8 +65,6 @@
     <Page Include="MainPage.xaml" />
   </ItemGroup>
   <ItemGroup>
-    <CopyFileToFolders Include="www\Glitch.db">
-      <Filter>Assets</Filter>
-    </CopyFileToFolders>
+    <Font Include="Assets\MaterialCommunityIcons.ttf" />
   </ItemGroup>
 </Project>

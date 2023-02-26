@@ -82,6 +82,7 @@
     <AppxBundlePlatforms>x86|x64</AppxBundlePlatforms>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     <GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
+    <AppxPackageSigningTimestampServerUrl>http://timestamp.entrust.net/TSS/RFC3161sha2TS</AppxPackageSigningTimestampServerUrl>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>

@@ -9,7 +9,7 @@
   <Identity
     Name="45800MacKenzieHC.GlitchCharacterManagement"
     Publisher="CN=1891AB23-36C1-406C-B200-6F125F75E4FD"
-    Version="0.0.1.0" />
+    Version="0.1.1.0" />
 
   <mp:PhoneIdentity PhoneProductId="a67ff214-83fd-4a15-b28c-c38a84150661" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
