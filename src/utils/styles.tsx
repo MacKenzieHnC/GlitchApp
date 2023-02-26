@@ -1,6 +1,11 @@
 import {StyleSheet} from 'react-native';
 
 const styles = StyleSheet.create({
+  button: {
+    paddingHorizontal: 10,
+    fontSize: 20,
+    textAlign: 'center',
+  },
   container: {
     alignItems: 'center',
     alignContent: 'center',
@@ -21,19 +26,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 20,
   },
-  scrollview: {
-    flexGrow: 1,
-  },
-  loading: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  switch: {
-    marginRight: -7,
-    marginTop: -5,
-    marginBottom: 5,
-  },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -49,17 +41,14 @@ const styles = StyleSheet.create({
     flex: 1,
     flexBasis: 0,
   },
-  row: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-  },
   listItem: {
     padding: 5,
     textAlignVertical: 'top',
   },
-  numericListItem: {
-    padding: 5,
-    textAlign: 'right',
+  loading: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   modal: {
     alignItems: 'center',
@@ -67,10 +56,21 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flex: 1,
   },
-  button: {
-    paddingHorizontal: 10,
-    fontSize: 20,
-    textAlign: 'center',
+  numericListItem: {
+    padding: 5,
+    textAlign: 'right',
+  },
+  scrollview: {
+    flexGrow: 1,
+  },
+  switch: {
+    marginRight: -7,
+    marginTop: -5,
+    marginBottom: 5,
+  },
+  row: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
   },
   textView: {
     flex: 1,
