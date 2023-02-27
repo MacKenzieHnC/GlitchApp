@@ -1,7 +1,7 @@
 import {Table, TD, TR} from '@mackenziehnc/table';
 import React, {forwardRef, useImperativeHandle, useRef} from 'react';
 import {useState, useEffect} from 'react';
-import {Alert, ScrollView, TouchableOpacity, View} from 'react-native';
+import {Alert, ScrollView, View} from 'react-native';
 import {Text, useTheme, Switch} from 'react-native-paper';
 import {useDispatch, useSelector} from 'react-redux';
 import Character from '../Components/Characters/Character';
@@ -129,12 +129,7 @@ const CharacterScreen = (_props: any, ref: any) => {
 
   // Component
   return (
-    <View style={{...styles.container, backgroundColor: colors.background}}>
-      <TouchableOpacity
-        style={{backgroundColor: colors.primaryContainer}}
-        onPress={save}>
-        <Text style={{...styles.button, color: colors.primary}}>SAVE</Text>
-      </TouchableOpacity>
+    <View style={{...styles.screen, backgroundColor: colors.background}}>
       <ScrollView contentContainerStyle={styles.scrollview} style={{flex: 1}}>
         {characters.map((c, index) => (
           <Character

@@ -10,6 +10,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignContent: 'center',
     justifyContent: 'center',
+    width: '100%',
     padding: 20,
   },
   h1: {
@@ -60,17 +61,24 @@ const styles = StyleSheet.create({
     padding: 5,
     textAlign: 'right',
   },
+  row: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  screen: {
+    alignItems: 'center',
+    alignContent: 'center',
+    justifyContent: 'center',
+    width: '100%',
+  },
   scrollview: {
     flexGrow: 1,
+    width: '100%',
   },
   switch: {
     marginRight: -7,
     marginTop: -5,
     marginBottom: 5,
-  },
-  row: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
   },
   textView: {
     flex: 1,

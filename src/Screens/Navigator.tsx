@@ -1,5 +1,5 @@
 import React, {ReactElement, useRef, useState} from 'react';
-import {ScrollView, Text, View} from 'react-native';
+import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import {Button, IconButton, useTheme} from 'react-native-paper';
 import Modal from '../Components/Modal';
 import Options from '../Components/Options';
@@ -35,6 +35,7 @@ const Drawer = () => {
   const [saveModalVisible, setSaveModalVisible] = useState(false);
   const [saveModalContent, setSaveModalContent] = useState();
   const {defer, deferRef} = useDeferredPromise<'save' | 'discard' | 'cancel'>();
+  const [showSaveButton, setShowSaveButton] = useState(false);
 
   const handleNavigation = async (screen: Screen) => {
     if (
@@ -108,27 +109,40 @@ const Drawer = () => {
       </Modal>
       <View
         style={{...styles.header, backgroundColor: colors.primaryContainer}}>
-        <IconButton
-          icon="menu"
-          size={30}
-          iconColor={colors.primary}
-          rippleColor={colors.secondary}
-          onPress={() => setDrawerOpen(!drawerOpen)}
-          accessibilityLabelledBy={undefined}
-          accessibilityLanguage={undefined}
-        />
-        <Text style={{...styles.h1, color: colors.primary}}>
-          {selectedScreen.name}
-        </Text>
-        <IconButton
-          icon="cog"
-          size={30}
-          iconColor={colors.primary}
-          rippleColor={colors.secondary}
-          onPress={() => setOptionsOpen(!optionsOpen)}
-          accessibilityLabelledBy={undefined}
-          accessibilityLanguage={undefined}
-        />
+        <View style={{...styles.row, alignItems: 'center'}}>
+          <IconButton
+            icon="menu"
+            size={30}
+            iconColor={colors.primary}
+            rippleColor={colors.secondary}
+            onPress={() => setDrawerOpen(!drawerOpen)}
+            accessibilityLabelledBy={undefined}
+            accessibilityLanguage={undefined}
+          />
+          <Text style={{...styles.h1, color: colors.primary}}>
+            {selectedScreen.name}
+          </Text>
+        </View>
+        <View style={{...styles.row, alignItems: 'center'}}>
+          {showSaveButton && (
+            <TouchableOpacity
+              style={{backgroundColor: colors.inversePrimary, height: 30}}
+              onPress={childRef.current.save}>
+              <Text style={{...styles.button, color: colors.primary}}>
+                SAVE
+              </Text>
+            </TouchableOpacity>
+          )}
+          <IconButton
+            icon="cog"
+            size={30}
+            iconColor={colors.primary}
+            rippleColor={colors.secondary}
+            onPress={() => setOptionsOpen(!optionsOpen)}
+            accessibilityLabelledBy={undefined}
+            accessibilityLanguage={undefined}
+          />
+        </View>
       </View>
       <View
         style={{
@@ -147,7 +161,12 @@ const Drawer = () => {
             ))}
           </View>
         )}
-        <selectedScreen.screen ref={childRef} />
+        <selectedScreen.screen
+          ref={(newRef: any) => {
+            childRef.current = newRef;
+            setShowSaveButton(newRef?.save !== undefined);
+          }}
+        />
       </View>
     </View>
   );
