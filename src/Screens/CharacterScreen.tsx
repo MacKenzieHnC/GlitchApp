@@ -6,11 +6,12 @@ import {Text, useTheme, Switch} from 'react-native-paper';
 import {useDispatch, useSelector} from 'react-redux';
 import Character from '../Components/Characters/Character';
 import LoadScreen from './LoadScreen';
-import {getCharacters, getDBConnection} from '../utils/db-service';
+import {getDBConnection} from '../utils/db/db-service';
 import {getPreferences, preferencesChanged} from '../utils/store/appSlice';
 import {character} from '../utils/types';
 import {capitalize} from '../utils/utils';
 import styles from '../utils/styles';
+import {getCharacters} from '../utils/db/db-characters';
 
 export const CharacterOptions = () => {
   const {preferences} = useSelector(getPreferences);

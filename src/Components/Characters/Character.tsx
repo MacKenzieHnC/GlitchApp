@@ -3,7 +3,6 @@ import {TouchableOpacity, View} from 'react-native';
 import {character, costs, flavor, housekeeping, stats} from '../../utils/types';
 import LoadScreen from '../../Screens/LoadScreen';
 import {capitalize, detectChanges, getPropFromPath} from '../../utils/utils';
-import {saveCharacterWithDB} from '../../utils/db-service';
 import {useSelector} from 'react-redux';
 import {getPreferences} from '../../utils/store/appSlice';
 import {Text, useTheme} from 'react-native-paper';
@@ -13,6 +12,7 @@ import {Table, TD, TR} from '@mackenziehnc/table';
 import styles from '../../utils/styles';
 import CharacterChanges from './CharacterChanges';
 import {SQLiteDatabase} from 'react-native-sqlite-storage';
+import {saveCharacterWithDB} from '../../utils/db/db-characters';
 
 const Character = ({initial}: {initial: character}, ref: any) => {
   const {colors} = useTheme();
