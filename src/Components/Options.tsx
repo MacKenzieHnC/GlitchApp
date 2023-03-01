@@ -63,6 +63,7 @@ const localStyles = StyleSheet.create({
     alignContent: 'center',
     justifyContent: 'center',
     width: '100%',
+    borderRadius: 15,
   },
   header: {
     borderBottomWidth: 1,
