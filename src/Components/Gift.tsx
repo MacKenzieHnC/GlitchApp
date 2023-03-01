@@ -13,17 +13,19 @@ const Gift = ({item}: {item: gift}) => {
   const {preferences} = useSelector(getPreferences);
   return (
     <View style={styles.container}>
-      <Text style={{...styles.h3, color: colors.primary}}>{item.name}</Text>
+      <Text style={{...styles.h3, color: colors.onBackground}}>
+        {item.name}
+      </Text>
       <Table priviledgedColumns={[0]}>
         {['cost', 'activation', 'aoe', 'flexibility'].map(key => (
           <TR key={key}>
             <TD>
-              <Text style={{...styles.listItem, color: colors.primary}}>
+              <Text style={{...styles.listItem, color: colors.onBackground}}>
                 {capitalize(key)}:
               </Text>
             </TD>
             <TD>
-              <Text style={{...styles.listItem, color: colors.primary}}>
+              <Text style={{...styles.listItem, color: colors.onBackground}}>
                 {item[key as keyof gift]}
               </Text>
             </TD>
@@ -32,7 +34,7 @@ const Gift = ({item}: {item: gift}) => {
       </Table>
       {preferences.descriptions && (
         <View style={styles.textView}>
-          <Text style={{color: colors.primary}}>{item.description}</Text>
+          <Text style={{color: colors.onBackground}}>{item.description}</Text>
         </View>
       )}
     </View>

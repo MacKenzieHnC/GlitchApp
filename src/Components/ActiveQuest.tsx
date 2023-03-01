@@ -33,90 +33,111 @@ const ActiveQuest = ({item, incrementXP}: ActiveQuestProps) => {
   }
   return (
     <View
-      style={{...styles.container, backgroundColor: colors.primaryContainer}}>
-      <Text style={{...styles.header, color: colors.primary}}>{item.name}</Text>
-      <Text style={{color: colors.primary}}>
-        {earnedXP} / {item.neededXP}xp
-      </Text>
-      <Text>pg {item.pg}</Text>
-      {preferences.descriptions && (
+      style={{...styles.container, backgroundColor: colors.secondaryContainer}}>
+      <View
+        style={{...styles.header, backgroundColor: colors.primaryContainer}}>
+        <Text style={{...styles.h1, color: colors.onPrimaryContainer}}>
+          {item.name}
+        </Text>
         <View>
-          <Text style={{color: colors.primary}}>{item.description}</Text>
-        </View>
-      )}
-
-      {/* Major Goals */}
-      {item.majorGoals.length > 0 && (
-        <View style={styles.goalContainer}>
-          <Text style={{...styles.h3, color: colors.primary}}>Major Goals</Text>
-          <View style={styles.listContainer}>
-            {item.majorGoals.map((goal, index) => (
-              <View key={index} style={styles.row}>
-                <Checkbox
-                  status={majorChecked[index] ? 'checked' : 'unchecked'}
-                  disabled={!!item.majorGoals[index].completed}
-                  onPress={() => {
-                    // Backwards because starts unchecked
-                    majorChecked[index] ? incrementXP(-5) : incrementXP(5);
-                    majorChecked[index]
-                      ? setEarnedXP(earnedXP - 5)
-                      : setEarnedXP(earnedXP + 5);
-                    let newArr = [...majorChecked];
-                    newArr[index] = !newArr[index];
-                    setMajorChecked(newArr);
-                  }}
-                />
-                <Text style={{...styles.text, color: colors.primary}}>
-                  {goal.description}
-                </Text>
-              </View>
-            ))}
-          </View>
-        </View>
-      )}
-
-      {/* Quest Flavor */}
-      {item.questFlavor.length > 0 && (
-        <View style={styles.goalContainer}>
-          <Text style={{...styles.h3, color: colors.primary}}>
-            Quest Flavor
+          <Text style={{color: colors.onSecondaryContainer}}>
+            {earnedXP} / {item.neededXP}xp
           </Text>
+          <Text style={{color: colors.onPrimaryContainer}}>pg {item.pg}</Text>
+        </View>
+      </View>
+      <View style={styles.innerContainer}>
+        {preferences.descriptions && (
+          <View>
+            <Text style={{color: colors.onSecondaryContainer}}>
+              {item.description}
+            </Text>
+          </View>
+        )}
+
+        {/* Major Goals */}
+        {item.majorGoals.length > 0 && (
           <View style={styles.goalContainer}>
-            {item.questFlavor.map((goal, index) => (
-              <View key={index} style={styles.row}>
-                <Checkbox
-                  status={flavorChecked[index] ? 'checked' : 'unchecked'}
-                  onPress={() => {
-                    // Backwards because starts unchecked
-                    if (!flavorChecked[index]) {
-                      incrementXP(1);
-                      setEarnedXP(earnedXP + 1);
-                      let newArr = flavorIncrementCount;
-                      newArr[index] += 1;
-                      setFlavorIncrementCount(newArr);
-                    }
-                    let newArr = [...flavorChecked];
-                    newArr[index] = !newArr[index];
-                    setFlavorChecked(newArr);
-                  }}
-                />
-                <Text style={{...styles.text, color: colors.primary}}>
-                  {goal.description}
-                </Text>
-                {flavorIncrementCount[index] > 0 && (
+            <Text style={{...styles.h3, color: colors.onSecondaryContainer}}>
+              Major Goals
+            </Text>
+            <View style={styles.listContainer}>
+              {item.majorGoals.map((goal, index) => (
+                <View key={index} style={styles.row}>
+                  <Checkbox
+                    status={majorChecked[index] ? 'checked' : 'unchecked'}
+                    disabled={!!item.majorGoals[index].completed}
+                    onPress={() => {
+                      // Backwards because starts unchecked
+                      majorChecked[index] ? incrementXP(-5) : incrementXP(5);
+                      majorChecked[index]
+                        ? setEarnedXP(earnedXP - 5)
+                        : setEarnedXP(earnedXP + 5);
+                      let newArr = [...majorChecked];
+                      newArr[index] = !newArr[index];
+                      setMajorChecked(newArr);
+                    }}
+                  />
                   <Text
                     style={{
                       ...styles.text,
-                      color: colors.onSurface,
+                      color: colors.onSecondaryContainer,
                     }}>
-                    +{flavorIncrementCount[index]}
+                    {goal.description}
                   </Text>
-                )}
-              </View>
-            ))}
+                </View>
+              ))}
+            </View>
           </View>
-        </View>
-      )}
+        )}
+
+        {/* Quest Flavor */}
+        {item.questFlavor.length > 0 && (
+          <View style={styles.goalContainer}>
+            <Text style={{...styles.h3, color: colors.onSecondaryContainer}}>
+              Quest Flavor
+            </Text>
+            <View style={styles.goalContainer}>
+              {item.questFlavor.map((goal, index) => (
+                <View key={index} style={styles.row}>
+                  <Checkbox
+                    status={flavorChecked[index] ? 'checked' : 'unchecked'}
+                    onPress={() => {
+                      // Backwards because starts unchecked
+                      if (!flavorChecked[index]) {
+                        incrementXP(1);
+                        setEarnedXP(earnedXP + 1);
+                        let newArr = flavorIncrementCount;
+                        newArr[index] += 1;
+                        setFlavorIncrementCount(newArr);
+                      }
+                      let newArr = [...flavorChecked];
+                      newArr[index] = !newArr[index];
+                      setFlavorChecked(newArr);
+                    }}
+                  />
+                  <Text
+                    style={{
+                      ...styles.text,
+                      color: colors.onSecondaryContainer,
+                    }}>
+                    {goal.description}
+                  </Text>
+                  {flavorIncrementCount[index] > 0 && (
+                    <Text
+                      style={{
+                        ...styles.text,
+                        color: colors.onSurface,
+                      }}>
+                      +{flavorIncrementCount[index]}
+                    </Text>
+                  )}
+                </View>
+              ))}
+            </View>
+          </View>
+        )}
+      </View>
     </View>
   );
 };
@@ -124,11 +145,13 @@ const ActiveQuest = ({item, incrementXP}: ActiveQuestProps) => {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    padding: 10,
     margin: 5,
     borderRadius: 15,
     flexBasis: 300,
     flexGrow: 1,
+  },
+  innerContainer: {
+    padding: 20,
   },
   listContainer: {
     alignItems: 'flex-start',
@@ -137,10 +160,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   header: {
+    borderBottomWidth: 1,
+    alignSelf: 'stretch',
     padding: 5,
-    textAlignVertical: 'top',
-    fontSize: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
+  h1: {fontSize: 30, flexShrink: 1},
   h3: {
     textAlign: 'center',
     fontSize: 20,

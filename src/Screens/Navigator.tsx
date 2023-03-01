@@ -79,7 +79,7 @@ const Drawer = () => {
               style={{
                 ...styles.h1,
                 ...localStyles.container,
-                color: colors.primary,
+                color: colors.onPrimaryContainer,
               }}>
               Unsaved Changes
             </Text>
@@ -119,13 +119,13 @@ const Drawer = () => {
           <IconButton
             icon="menu"
             size={30}
-            iconColor={colors.primary}
+            iconColor={colors.onPrimaryContainer}
             rippleColor={colors.secondary}
             onPress={() => setDrawerOpen(!drawerOpen)}
             accessibilityLabelledBy={undefined}
             accessibilityLanguage={undefined}
           />
-          <Text style={{...styles.h1, color: colors.primary}}>
+          <Text style={{...styles.h1, color: colors.onPrimaryContainer}}>
             {selectedScreen.name}
           </Text>
         </View>
@@ -134,7 +134,11 @@ const Drawer = () => {
             <TouchableOpacity
               style={{backgroundColor: colors.inversePrimary}}
               onPress={childRef.current.save}>
-              <Text style={{...styles.button, color: colors.primary}}>
+              <Text
+                style={{
+                  ...localStyles.buttonText,
+                  color: colors.onPrimaryContainer,
+                }}>
                 SAVE
               </Text>
             </TouchableOpacity>
@@ -142,7 +146,7 @@ const Drawer = () => {
           <IconButton
             icon="cog"
             size={30}
-            iconColor={colors.primary}
+            iconColor={colors.onPrimaryContainer}
             rippleColor={colors.secondary}
             onPress={() => setOptionsOpen(!optionsOpen)}
             accessibilityLabelledBy={undefined}
@@ -181,6 +185,7 @@ const Drawer = () => {
 
 const localStyles = StyleSheet.create({
   container: {flex: 1},
+  buttonText: {fontSize: 20, textAlignVertical: 'center', paddingHorizontal: 5},
   drawer: {flexDirection: 'row'},
   row: {flexDirection: 'row', alignItems: 'center'},
   scrollView: {flexGrow: 0},
