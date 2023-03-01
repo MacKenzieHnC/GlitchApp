@@ -51,7 +51,7 @@ const ActiveQuest = ({item, incrementXP}: ActiveQuestProps) => {
           <Text style={{...styles.h3, color: colors.primary}}>Major Goals</Text>
           <View style={styles.listContainer}>
             {item.majorGoals.map((goal, index) => (
-              <View key={index} style={{...styles.row, flexWrap: 'nowrap'}}>
+              <View key={index} style={styles.row}>
                 <Checkbox
                   status={majorChecked[index] ? 'checked' : 'unchecked'}
                   disabled={!!item.majorGoals[index].completed}
@@ -77,7 +77,7 @@ const ActiveQuest = ({item, incrementXP}: ActiveQuestProps) => {
 
       {/* Quest Flavor */}
       {item.questFlavor.length > 0 && (
-        <View style={{...styles.goalContainer, alignItems: 'center'}}>
+        <View style={styles.goalContainer}>
           <Text style={{...styles.h3, color: colors.primary}}>
             Quest Flavor
           </Text>
@@ -107,8 +107,7 @@ const ActiveQuest = ({item, incrementXP}: ActiveQuestProps) => {
                   <Text
                     style={{
                       ...styles.text,
-                      color: 'green',
-                      alignSelf: 'flex-end',
+                      color: colors.onSurface,
                     }}>
                     +{flavorIncrementCount[index]}
                   </Text>

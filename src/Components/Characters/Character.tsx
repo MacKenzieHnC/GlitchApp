@@ -59,7 +59,7 @@ const Character = ({initial}: {initial: character}, ref: any) => {
 
       {/* XP */}
       {preferences.characteristics.xp && (
-        <View style={{alignItems: 'center', flexDirection: 'row'}}>
+        <View style={styles.row}>
           <TouchableOpacity
             style={{backgroundColor: colors.primaryContainer}}
             onPress={() =>
@@ -70,9 +70,7 @@ const Character = ({initial}: {initial: character}, ref: any) => {
             }>
             <Text style={{...styles.button, color: colors.primary}}>{'<'}</Text>
           </TouchableOpacity>
-          <Text style={{padding: 5, color: colors.primary}}>
-            XP: {chara.xp}
-          </Text>
+          <Text style={{color: colors.primary}}>XP: {chara.xp}</Text>
           <TouchableOpacity
             style={{backgroundColor: colors.primaryContainer}}
             onPress={() => setChara({...chara, xp: chara.xp + 1})}>

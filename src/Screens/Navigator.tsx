@@ -1,5 +1,11 @@
 import React, {ReactElement, useRef, useState} from 'react';
-import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {Button, IconButton, useTheme} from 'react-native-paper';
 import Modal from '../Components/Modal';
 import Options from '../Components/Options';
@@ -62,10 +68,8 @@ const Drawer = () => {
     return (
       <Modal
         isOpen={saveModalVisible}
-        onDismiss={() => setSaveModalVisible(false)}
-        style={{maxWidth: '75%'}}>
-        <View
-          style={{alignItems: 'center', backgroundColor: colors.background}}>
+        onDismiss={() => setSaveModalVisible(false)}>
+        <View style={{backgroundColor: colors.background}}>
           <View
             style={{
               ...styles.header,
@@ -74,14 +78,16 @@ const Drawer = () => {
             <Text
               style={{
                 ...styles.h1,
-                textAlign: 'center',
+                ...localStyles.container,
                 color: colors.primary,
               }}>
               Unsaved Changes
             </Text>
           </View>
-          <View style={{flexShrink: 1}}>
-            <ScrollView style={{flexGrow: 0}} nestedScrollEnabled={true}>
+          <View>
+            <ScrollView
+              style={localStyles.scrollView}
+              nestedScrollEnabled={true}>
               {saveModalContent}
             </ScrollView>
           </View>
@@ -102,14 +108,14 @@ const Drawer = () => {
   };
 
   return (
-    <View style={{flex: 1}}>
+    <View style={localStyles.container}>
       <SaveModal />
       <Modal isOpen={optionsOpen} onDismiss={() => setOptionsOpen(false)}>
         <Options>{selectedScreen.options}</Options>
       </Modal>
       <View
         style={{...styles.header, backgroundColor: colors.primaryContainer}}>
-        <View style={{...styles.row, alignItems: 'center'}}>
+        <View style={localStyles.row}>
           <IconButton
             icon="menu"
             size={30}
@@ -123,10 +129,10 @@ const Drawer = () => {
             {selectedScreen.name}
           </Text>
         </View>
-        <View style={{...styles.row, alignItems: 'center'}}>
+        <View style={localStyles.row}>
           {showSaveButton && (
             <TouchableOpacity
-              style={{backgroundColor: colors.inversePrimary, height: 30}}
+              style={{backgroundColor: colors.inversePrimary}}
               onPress={childRef.current.save}>
               <Text style={{...styles.button, color: colors.primary}}>
                 SAVE
@@ -146,9 +152,8 @@ const Drawer = () => {
       </View>
       <View
         style={{
-          backgroundColor: colors.background,
-          flex: 1,
-          flexDirection: 'row',
+          ...localStyles.drawer,
+          backgroundColor: colors.secondaryContainer,
         }}>
         {drawerOpen && (
           <View>
@@ -156,7 +161,9 @@ const Drawer = () => {
               <Button
                 key={screen.name}
                 onPress={() => handleNavigation(screen)}>
-                <Text>{screen.name}</Text>
+                <Text style={{color: colors.onSecondaryContainer}}>
+                  {screen.name}
+                </Text>
               </Button>
             ))}
           </View>
@@ -171,5 +178,12 @@ const Drawer = () => {
     </View>
   );
 };
+
+const localStyles = StyleSheet.create({
+  container: {flex: 1},
+  drawer: {flexDirection: 'row'},
+  row: {flexDirection: 'row', alignItems: 'center'},
+  scrollView: {flexGrow: 0},
+});
 
 export default Drawer;

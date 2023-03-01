@@ -131,7 +131,7 @@ const CharacterScreen = (_props: any, ref: any) => {
   // Component
   return (
     <View style={{...styles.screen, backgroundColor: colors.background}}>
-      <ScrollView contentContainerStyle={styles.scrollview} style={{flex: 1}}>
+      <ScrollView contentContainerStyle={styles.scrollview}>
         {characters.map((c, index) => (
           <Character
             key={c.key}

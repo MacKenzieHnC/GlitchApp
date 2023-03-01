@@ -1,50 +1,77 @@
 import React from 'react';
 import {Text, View} from 'react-native';
 import {Switch, useTheme} from 'react-native-paper';
-import {StyleSheet} from 'react-native-windows';
 import {useDispatch, useSelector} from 'react-redux';
 import styles from '../utils/styles';
 import {getPreferences, preferencesChanged} from '../utils/store/appSlice';
+import {StyleSheet} from 'react-native';
 
-const Options = ({children}) => {
+const Options = ({children}: any) => {
   const {colors} = useTheme();
   const dispatch = useDispatch();
   const {preferences} = useSelector(getPreferences);
   return (
     <View
       style={{
-        ...styles.container,
-        backgroundColor: colors.primaryContainer,
-        borderColor: colors.backdrop,
+        ...localStyles.container,
+        backgroundColor: colors.secondaryContainer,
       }}>
-      <View style={{...styles.header, backgroundColor: colors.backdrop}}>
+      <View
+        style={{
+          ...localStyles.header,
+          backgroundColor: colors.primaryContainer,
+        }}>
         <Text
           style={{
             ...styles.h1,
-            color: colors.primary,
+            color: colors.onPrimaryContainer,
           }}>
           Options
         </Text>
       </View>
-      <View style={styles.row}>
-        <Switch
-          style={styles.switch}
-          value={preferences.darkMode}
-          onValueChange={() => {
-            dispatch(
-              preferencesChanged({
-                ...preferences,
-                darkMode: !preferences.darkMode,
-              }),
-            );
-            return;
-          }}
-        />
-        <Text style={{color: colors.primary}}>Dark Mode</Text>
+      <View style={localStyles.innerContainer}>
+        <View style={styles.row}>
+          <Switch
+            style={styles.switch}
+            value={preferences.darkMode}
+            onValueChange={() => {
+              dispatch(
+                preferencesChanged({
+                  ...preferences,
+                  darkMode: !preferences.darkMode,
+                }),
+              );
+              return;
+            }}
+          />
+          <Text
+            style={{
+              color: colors.onSecondaryContainer,
+            }}>
+            Dark Mode
+          </Text>
+        </View>
+        {children}
       </View>
-      {children}
     </View>
   );
 };
+
+const localStyles = StyleSheet.create({
+  container: {
+    alignItems: 'center',
+    alignContent: 'center',
+    justifyContent: 'center',
+    width: '100%',
+  },
+  header: {
+    borderBottomWidth: 1,
+    alignSelf: 'stretch',
+    padding: 5,
+  },
+  innerContainer: {
+    padding: 20,
+  },
+});
 
 export default Options;

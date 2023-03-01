@@ -16,7 +16,7 @@ export default function CharacterChanges({initial, current}: ChangeProps) {
   let changes = detectChanges(initial, current);
   if (changes.length > 0) {
     return (
-      <View key={current.name} style={{...styles.innerContainer, padding: 10}}>
+      <View key={current.name} style={styles.innerContainer}>
         <Text key={0} style={styles.h2}>
           {current.name}
         </Text>

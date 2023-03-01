@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
   },
   switch: {
     marginRight: -7,
-    marginTop: -5,
+    marginTop: -11,
     marginBottom: 5,
   },
   textView: {
