@@ -162,9 +162,6 @@
   <ItemGroup>
     <None Include="GlitchApp_TemporaryKey.pfx" />
     <None Include="PropertySheet.props" />
-    <None Include="www\Glitch.db">
-      <DeploymentContent>true</DeploymentContent>
-    </None>
     <Text Include="readme.txt">
       <DeploymentContent>false</DeploymentContent>
     </Text>

@@ -1,5 +1,6 @@
 export interface character {
   key: number;
+  fileName: string;
   name: string;
   discipline: string;
   xp: number;

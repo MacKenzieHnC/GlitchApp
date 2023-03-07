@@ -20,7 +20,6 @@ import {
   MD3DarkTheme,
   MD3LightTheme,
 } from 'react-native-paper';
-import CharacterScreen from './Screens/CharacterScreen';
 import {getPreferences} from './utils/store/appSlice';
 import Drawer from './Screens/Navigator';
 

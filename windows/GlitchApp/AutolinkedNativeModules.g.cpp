@@ -6,8 +6,8 @@
 // Includes from react-native-document-picker
 #include <winrt/ReactNativeDocumentPicker.h>
 
-// Includes from react-native-sqlite-storage
-#include <winrt/SQLitePlugin.h>
+// Includes from react-native-fs
+#include <winrt/RNFS.h>
 
 namespace winrt::Microsoft::ReactNative
 {
@@ -16,8 +16,8 @@ void RegisterAutolinkedNativeModulePackages(winrt::Windows::Foundation::Collecti
 { 
     // IReactPackageProviders from react-native-document-picker
     packageProviders.Append(winrt::ReactNativeDocumentPicker::ReactPackageProvider());
-    // IReactPackageProviders from react-native-sqlite-storage
-    packageProviders.Append(winrt::SQLitePlugin::ReactPackageProvider());
+    // IReactPackageProviders from react-native-fs
+    packageProviders.Append(winrt::RNFS::ReactPackageProvider());
 }
 
 }

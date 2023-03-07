@@ -52,9 +52,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="PropertySheet.props" />
-    <None Include="www\Glitch.db">
-      <Filter>Assets</Filter>
-    </None>
     <None Include="GlitchApp_TemporaryKey.pfx" />
     <None Include="Package.StoreAssociation.xml" />
   </ItemGroup>

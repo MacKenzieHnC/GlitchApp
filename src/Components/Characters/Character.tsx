@@ -11,8 +11,7 @@ import ActiveQuest from '../ActiveQuest';
 import {Table, TD, TR} from '@mackenziehnc/table';
 import styles from '../../utils/styles';
 import CharacterChanges from './CharacterChanges';
-import {SQLiteDatabase} from 'react-native-sqlite-storage';
-import {saveCharacterWithDB} from '../../utils/db/db-characters';
+import {saveCharacter} from '../../utils/fileIO';
 
 const Character = ({initial}: {initial: character}, ref: any) => {
   const {colors} = useTheme();
@@ -25,14 +24,14 @@ const Character = ({initial}: {initial: character}, ref: any) => {
     hasUnsavedChanges: () => {
       return CharacterChanges({initial: lastSaved, current: chara});
     },
-    save: (db: SQLiteDatabase) => {
+    save: () => {
       const changes: any = {};
       detectChanges(lastSaved, chara).forEach(change => {
         const key = change[change.length - 1];
         changes[key] = getPropFromPath(chara, change);
       });
       if (Object.keys(changes).length > 0) {
-        saveCharacterWithDB(db, chara.key, changes);
+        saveCharacter(chara, true);
         setLastSaved(chara);
       }
     },

@@ -6,12 +6,11 @@ import {Text, useTheme, Switch} from 'react-native-paper';
 import {useDispatch, useSelector} from 'react-redux';
 import Character from '../Components/Characters/Character';
 import LoadScreen from './LoadScreen';
-import {getDBConnection} from '../utils/db/db-service';
 import {getPreferences, preferencesChanged} from '../utils/store/appSlice';
 import {character} from '../utils/types';
 import {capitalize} from '../utils/utils';
 import styles from '../utils/styles';
-import {getCharacters} from '../utils/db/db-characters';
+import {getCharacters} from '../utils/fileIO';
 
 export const CharacterOptions = () => {
   const {preferences} = useSelector(getPreferences);
@@ -75,7 +74,7 @@ const CharacterScreen = (_props: any, ref: any) => {
   const [characters, setCharacters] = useState<character[]>();
   useEffect(() => {
     (async () => {
-      var c = await getCharacters();
+      var c = await getCharacters(true);
       setCharacters(c);
     })();
   }, []);
@@ -108,17 +107,15 @@ const CharacterScreen = (_props: any, ref: any) => {
   }));
 
   const save = async () => {
-    const db = await getDBConnection();
     try {
       childRef.current.forEach((child: any) => {
         if (child.hasUnsavedChanges()) {
-          child.save(db);
+          child.save();
         }
       });
     } catch (error) {
       throw Error('Failed to save characters: ' + error);
     } finally {
-      db.close();
       Alert.alert('Save successful');
     }
   };

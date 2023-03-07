@@ -6,9 +6,9 @@
     <ProjectReference Include="$(ProjectDir)..\..\node_modules\react-native-document-picker\windows\ReactNativeDocumentPicker\ReactNativeDocumentPicker.csproj">
       <Project>{A4C9C727-0AEB-4A3D-B547-BEDB812B172D}</Project>
     </ProjectReference>
-    <!-- Projects from react-native-sqlite-storage -->
-    <ProjectReference Include="$(ProjectDir)..\..\node_modules\react-native-sqlite-storage\platforms\windows\SQLitePlugin\SQLitePlugin.vcxproj">
-      <Project>{a09b9a47-e2b9-4294-9746-ac55213fc642}</Project>
+    <!-- Projects from react-native-fs -->
+    <ProjectReference Include="$(ProjectDir)..\..\node_modules\react-native-fs\windows\RNFS\RNFS.vcxproj">
+      <Project>{4f89a807-a843-4df0-8d74-a04a3f48fef9}</Project>
     </ProjectReference>
   </ItemGroup>
 </Project>
