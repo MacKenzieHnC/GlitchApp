@@ -153,6 +153,7 @@ const styles = StyleSheet.create({
   },
   innerContainer: {
     padding: 20,
+    width: '100%',
   },
   listContainer: {
     alignItems: 'flex-start',
