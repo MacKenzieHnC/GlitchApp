@@ -31,7 +31,7 @@ const Character = ({initial}: {initial: character}, ref: any) => {
         changes[key] = getPropFromPath(chara, change);
       });
       if (Object.keys(changes).length > 0) {
-        saveCharacter(chara, true);
+        saveCharacter(chara);
         setLastSaved(chara);
       }
     },

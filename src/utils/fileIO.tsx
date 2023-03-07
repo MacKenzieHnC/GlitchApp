@@ -13,8 +13,8 @@ export const getCharacters = async (pc: boolean) => {
   return characters;
 };
 
-export const saveCharacter = async (char: character, pc: boolean) => {
-  const dir = mainDir + (pc ? '/PCs' : '/NPCs');
+export const saveCharacter = async (char: character) => {
+  const dir = mainDir + (char.pc ? '/PCs' : '/NPCs');
   const path = dir + '/' + char.fileName + '.glitch-character';
   console.log('writing to path: ' + path);
   RNFS.mkdir(dir).then(() => {
