@@ -76,6 +76,7 @@ const ActiveQuest = ({item, incrementXP}: ActiveQuestProps) => {
                       let newArr = [...majorChecked];
                       newArr[index] = !newArr[index];
                       setMajorChecked(newArr);
+                      item.majorGoals[index].completed = newArr[index];
                     }}
                   />
                   <Text
