@@ -1,67 +1,56 @@
-import React, {useState} from 'react';
-import {Alert, TouchableOpacity, View} from 'react-native';
-import {StyleSheet} from 'react-native-windows';
-import {character, costs, flavor, housekeeping, stats} from '../utils/types';
-import LoadScreen from './LoadScreen';
-import {capitalize, detectChanges, getPropFromPath} from '../utils/utils';
-import {saveCharacter} from '../utils/db-service';
+import React, {forwardRef, useImperativeHandle, useState} from 'react';
+import {TouchableOpacity, View} from 'react-native';
+import {character, costs, flavor, housekeeping, stats} from '../../utils/types';
+import LoadScreen from '../../Screens/LoadScreen';
+import {capitalize, detectChanges, getPropFromPath} from '../../utils/utils';
 import {useSelector} from 'react-redux';
-import {getPreferences} from '../utils/store/appSlice';
+import {getPreferences} from '../../utils/store/appSlice';
 import {Text, useTheme} from 'react-native-paper';
-import Gift from './Gift';
-import ActiveQuest from './ActiveQuest';
+import Gift from '../Gift';
+import ActiveQuest from '../ActiveQuest';
 import {Table, TD, TR} from '@mackenziehnc/table';
+import styles from '../../utils/styles';
+import CharacterChanges from './CharacterChanges';
+import {saveCharacter} from '../../utils/fileIO';
 
-const Character = ({initial}: {initial: character}) => {
+const Character = ({initial}: {initial: character}, ref: any) => {
   const {colors} = useTheme();
   // Load
   const [chara, setChara] = useState(initial);
   const [lastSaved, setLastSaved] = useState(initial);
   const {preferences} = useSelector(getPreferences);
+
+  useImperativeHandle(ref, () => ({
+    hasUnsavedChanges: () => {
+      return CharacterChanges({initial: lastSaved, current: chara});
+    },
+    save: () => {
+      const changes: any = {};
+      detectChanges(lastSaved, chara).forEach(change => {
+        const key = change[change.length - 1];
+        changes[key] = getPropFromPath(chara, change);
+      });
+      if (Object.keys(changes).length > 0) {
+        saveCharacter(chara);
+        setLastSaved(chara);
+      }
+    },
+  }));
+
   if (!chara || !preferences) {
     return <LoadScreen />;
   }
 
-  // Save
-  const onSave = () => {
-    const changes = detectChanges(lastSaved, chara);
-    var alertMessage = '';
-    if (changes.length > 0) {
-      var changeList = {}; // Object storing key/value pairs for changes (db is non-nested)
-      changes.forEach(change => {
-        const key = change[change.length - 1];
-        changeList[key] = getPropFromPath(chara, change)[key];
-        alertMessage +=
-          '\n' +
-          key +
-          ': ' +
-          getPropFromPath(lastSaved, change)[key] +
-          ' => ' +
-          getPropFromPath(chara, change)[key];
-      });
-      saveCharacter(chara.key, changeList); // Send changes to db
-      setLastSaved(JSON.parse(JSON.stringify(chara))); // Deep copy / store changes in state
-      Alert.alert('Save successful', alertMessage);
-    } else {
-      Alert.alert('No changes detected!');
-    }
-  };
-
   // Component
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        style={{backgroundColor: colors.primaryContainer}}
-        onPress={onSave}>
-        <Text style={{...styles.button, color: colors.primary}}>SAVE</Text>
-      </TouchableOpacity>
       {/* Name */}
-      <Text style={{...styles.h1, color: colors.primary}}>
+      <Text style={{...styles.h1, color: colors.onBackground}}>
         {lastSaved.name}
       </Text>
       {preferences.characteristics.discipline && (
         <View style={styles.textView}>
-          <Text style={{...styles.h2, color: colors.primary}}>
+          <Text style={{...styles.h2, color: colors.onBackground}}>
             Disciplined in {lastSaved.discipline}
           </Text>
         </View>
@@ -69,7 +58,7 @@ const Character = ({initial}: {initial: character}) => {
 
       {/* XP */}
       {preferences.characteristics.xp && (
-        <View style={{alignItems: 'center', flexDirection: 'row'}}>
+        <View style={styles.row}>
           <TouchableOpacity
             style={{backgroundColor: colors.primaryContainer}}
             onPress={() =>
@@ -78,22 +67,24 @@ const Character = ({initial}: {initial: character}) => {
                 xp: chara.xp === 0 ? chara.xp : chara.xp - 1,
               })
             }>
-            <Text style={{...styles.button, color: colors.primary}}>{'<'}</Text>
+            <Text style={{...styles.button, color: colors.onBackground}}>
+              {'<'}
+            </Text>
           </TouchableOpacity>
-          <Text style={{padding: 5, color: colors.primary}}>
-            XP: {chara.xp}
-          </Text>
+          <Text style={{color: colors.onBackground}}>XP: {chara.xp}</Text>
           <TouchableOpacity
             style={{backgroundColor: colors.primaryContainer}}
             onPress={() => setChara({...chara, xp: chara.xp + 1})}>
-            <Text style={{...styles.button, color: colors.primary}}>{'>'}</Text>
+            <Text style={{...styles.button, color: colors.onBackground}}>
+              {'>'}
+            </Text>
           </TouchableOpacity>
         </View>
       )}
 
       {preferences.characteristics.flavor && (
         <View style={styles.innerContainer}>
-          <Text style={{...styles.h2, color: colors.primary}}>Flavor</Text>
+          <Text style={{...styles.h2, color: colors.onBackground}}>Flavor</Text>
           <Table priviledgedColumns={[0]}>
             {Object.keys(chara.flavor)
               .map(key => ({
@@ -112,14 +103,22 @@ const Character = ({initial}: {initial: character}) => {
                   })),
               )
               .map(row => (
-                <TR>
+                <TR key={row.name}>
                   <TD>
-                    <Text style={{...styles.listItem, color: colors.primary}}>
+                    <Text
+                      style={{
+                        ...styles.listItem,
+                        color: colors.onBackground,
+                      }}>
                       {row.name}
                     </Text>
                   </TD>
                   <TD>
-                    <Text style={{...styles.listItem, color: colors.primary}}>
+                    <Text
+                      style={{
+                        ...styles.listItem,
+                        color: colors.onBackground,
+                      }}>
                       {row.value}
                     </Text>
                   </TD>
@@ -132,7 +131,7 @@ const Character = ({initial}: {initial: character}) => {
       {/* Gifts */}
       {chara.gifts.length > 0 && preferences.characteristics.gifts && (
         <View style={styles.innerContainer}>
-          <Text style={{...styles.h2, color: colors.primary}}>Gifts</Text>
+          <Text style={{...styles.h2, color: colors.onBackground}}>Gifts</Text>
           {chara.gifts.map((gift, index) => (
             <Gift key={index} item={gift} />
           ))}
@@ -143,12 +142,18 @@ const Character = ({initial}: {initial: character}) => {
         {/* Stats */}
         {preferences.characteristics.stats && (
           <View style={styles.innerContainer}>
-            <Text style={{...styles.h2, color: colors.primary}}>Stats</Text>
+            <Text style={{...styles.h2, color: colors.onBackground}}>
+              Stats
+            </Text>
             <Table priviledgedColumns={[0]}>
               {Object.keys(chara.stats).map(key => (
-                <TR>
+                <TR key={key}>
                   <TD>
-                    <Text style={{...styles.listItem, color: colors.primary}}>
+                    <Text
+                      style={{
+                        ...styles.listItem,
+                        color: colors.onBackground,
+                      }}>
                       {capitalize(key)}:
                     </Text>
                   </TD>
@@ -156,7 +161,7 @@ const Character = ({initial}: {initial: character}) => {
                     <Text
                       style={{
                         ...styles.numericListItem,
-                        color: colors.primary,
+                        color: colors.onBackground,
                       }}>
                       {chara.stats[key as keyof stats]}
                     </Text>
@@ -170,10 +175,12 @@ const Character = ({initial}: {initial: character}) => {
         {/* Costs */}
         {preferences.characteristics.costs && (
           <View style={styles.innerContainer}>
-            <Text style={{...styles.h2, color: colors.primary}}>Costs</Text>
+            <Text style={{...styles.h2, color: colors.onBackground}}>
+              Costs
+            </Text>
             <Table priviledgedColumns={[0, 1, 2, 3]}>
               {Object.keys(chara.costs).map(key => (
-                <TR>
+                <TR key={key}>
                   <TD>
                     <TouchableOpacity
                       style={{backgroundColor: colors.primaryContainer}}
@@ -189,13 +196,21 @@ const Character = ({initial}: {initial: character}) => {
                           },
                         })
                       }>
-                      <Text style={{...styles.button, color: colors.primary}}>
+                      <Text
+                        style={{
+                          ...styles.button,
+                          color: colors.onBackground,
+                        }}>
                         {'<'}
                       </Text>
                     </TouchableOpacity>
                   </TD>
                   <TD>
-                    <Text style={{...styles.listItem, color: colors.primary}}>
+                    <Text
+                      style={{
+                        ...styles.listItem,
+                        color: colors.onBackground,
+                      }}>
                       {capitalize(key)}:
                     </Text>
                   </TD>
@@ -203,7 +218,7 @@ const Character = ({initial}: {initial: character}) => {
                     <Text
                       style={{
                         ...styles.numericListItem,
-                        color: colors.primary,
+                        color: colors.onBackground,
                       }}>
                       {chara.costs[key as keyof costs]}
                     </Text>
@@ -223,7 +238,11 @@ const Character = ({initial}: {initial: character}) => {
                           },
                         })
                       }>
-                      <Text style={{...styles.button, color: colors.primary}}>
+                      <Text
+                        style={{
+                          ...styles.button,
+                          color: colors.onPrimaryContainer,
+                        }}>
                         {'>'}
                       </Text>
                     </TouchableOpacity>
@@ -239,7 +258,13 @@ const Character = ({initial}: {initial: character}) => {
       {preferences.characteristics.quests && (
         <View style={styles.row}>
           {chara.quests.map((quest, index) => (
-            <ActiveQuest key={index} item={quest} />
+            <ActiveQuest
+              key={index}
+              item={quest}
+              incrementXP={(increase: number) =>
+                setChara({...chara, xp: chara.xp + increase})
+              }
+            />
           ))}
         </View>
       )}
@@ -247,62 +272,4 @@ const Character = ({initial}: {initial: character}) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    alignContent: 'center',
-    justifyContent: 'center',
-    padding: 20,
-    flexBasis: 300,
-  },
-  innerContainer: {
-    alignItems: 'center',
-    alignContent: 'center',
-    justifyContent: 'center',
-    flex: 1,
-    flexBasis: 0,
-  },
-  h1: {
-    flex: 1,
-    textAlign: 'center',
-    fontSize: 30,
-  },
-  h2: {
-    flex: 1,
-    textAlign: 'center',
-    fontSize: 25,
-  },
-  h3: {
-    flex: 1,
-    textAlign: 'center',
-    fontSize: 20,
-  },
-  row: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-  },
-  listItem: {
-    padding: 5,
-    textAlignVertical: 'top',
-  },
-  numericListItem: {
-    padding: 5,
-    textAlign: 'right',
-  },
-  modal: {
-    alignItems: 'center',
-    alignContent: 'center',
-    justifyContent: 'center',
-    flex: 1,
-  },
-  button: {
-    paddingHorizontal: 10,
-    fontSize: 20,
-    textAlign: 'center',
-  },
-  textView: {
-    flex: 1,
-  },
-});
-
-export default Character;
+export default forwardRef(Character);

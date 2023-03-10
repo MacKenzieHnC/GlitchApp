@@ -3,12 +3,7 @@
 */
 
 export function getPropFromPath(obj: any, path: string[]) {
-  return {
-    [path[path.length - 1]]: path.reduce(
-      (prev, current) => prev?.[current],
-      obj,
-    ),
-  };
+  return path.reduce((prev, current) => prev?.[current], obj);
 }
 
 function isLeafNode(obj: any) {

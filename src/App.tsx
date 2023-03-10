@@ -20,8 +20,8 @@ import {
   MD3DarkTheme,
   MD3LightTheme,
 } from 'react-native-paper';
-import CharacterScreen from './Screens/CharacterScreen';
 import {getPreferences} from './utils/store/appSlice';
+import Drawer from './Screens/Navigator';
 
 // My stuff
 
@@ -29,7 +29,7 @@ const App = () => {
   const {preferences} = useSelector(getPreferences);
   return (
     <PaperProvider theme={preferences.darkMode ? MD3DarkTheme : MD3LightTheme}>
-      <CharacterScreen />
+      <Drawer />
     </PaperProvider>
   );
 };
