@@ -1,7 +1,9 @@
 import {character} from './types';
 import RNFS from 'react-native-fs';
+import {Platform} from 'react-native';
 
-const mainDir = RNFS.CachesDirectoryPath;
+const mainDir =
+  RNFS.MainBundlePath + (Platform.OS === 'windows' ? '\\LocalState' : '');
 
 export const getCharacters = async (pc: boolean) => {
   var characters: character[] = [];
