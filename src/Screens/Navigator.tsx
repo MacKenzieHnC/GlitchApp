@@ -12,6 +12,7 @@ import Options from '../Components/Options';
 import {useDeferredPromise} from '../utils/DeferredPromise';
 import styles from '../utils/styles';
 import CharacterScreen, {CharacterOptions} from './CharacterScreen';
+import {WelcomeScreen} from './WelcomeScreen';
 
 interface Screen {
   name: string;
@@ -32,8 +33,8 @@ const Drawer = () => {
       options: <CharacterOptions />,
     },
     {
-      name: 'Welcome',
-      screen: View,
+      name: 'Folder Location',
+      screen: WelcomeScreen,
       options: <View />,
     },
   ];

@@ -23,3 +23,7 @@ export const saveCharacter = async (char: character) => {
     });
   });
 };
+
+export const getFolderLocation = () => {
+  return mainDir;
+};
