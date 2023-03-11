@@ -41,7 +41,7 @@ msbuild.binlog
 node_modules/**
 !node_modules/**/
 node_modules/react-native
-!node_modules/react-native-gesture-handler/src/RNGestureHandlerModule.windows.ts
+!node_modules/react-native-document-picker/windows/ReactNativeDocumentPicker/ReactNativeDocumentPicker.csproj
 npm-debug.log
 yarn-error.log
 
