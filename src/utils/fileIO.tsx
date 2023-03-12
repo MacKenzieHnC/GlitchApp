@@ -1,7 +1,7 @@
 import {character} from './types';
 import RNFS from 'react-native-fs';
-import {Alert, Platform} from 'react-native';
-import DocumentPicker, {pickMultiple} from 'react-native-document-picker';
+import {Alert} from 'react-native';
+import {pickMultiple} from 'react-native-document-picker';
 import {backslash} from './utils';
 
 export const localStateDir = RNFS.CachesDirectoryPath;

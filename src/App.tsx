@@ -8,10 +8,10 @@
  */
 
 // React
-import React from 'react';
+import React, {useEffect} from 'react';
 
 // Redux
-import {Provider, useSelector} from 'react-redux';
+import {Provider, useDispatch, useSelector} from 'react-redux';
 import {store} from './utils/store';
 
 // Paper
@@ -20,13 +20,31 @@ import {
   MD3DarkTheme,
   MD3LightTheme,
 } from 'react-native-paper';
-import {getPreferences} from './utils/store/appSlice';
+import {
+  getPreferences,
+  mainDirChanged,
+  preferencesChanged,
+  settingsFilePath,
+} from './utils/store/appSlice';
 import Drawer from './Screens/Navigator';
+import RNFS from 'react-native-fs';
+import {Alert} from 'react-native';
 
 // My stuff
 
 const App = () => {
   const {preferences} = useSelector(getPreferences);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    RNFS.readFile(settingsFilePath)
+      .then(file => JSON.parse(file))
+      .then(state => {
+        console.log(state);
+        dispatch(mainDirChanged(state.mainDir));
+        dispatch(preferencesChanged(state.preferences));
+      })
+      .catch(err => Alert.alert('Load preferences failed:\n' + err));
+  }, [dispatch]);
   return (
     <PaperProvider theme={preferences.darkMode ? MD3DarkTheme : MD3LightTheme}>
       <Drawer />
