@@ -31,8 +31,12 @@ const Character = ({initial}: {initial: character}, ref: any) => {
         changes[key] = getPropFromPath(chara, change);
       });
       if (Object.keys(changes).length > 0) {
-        saveCharacter(chara);
-        setLastSaved(chara);
+        return saveCharacter(chara).then(() => {
+          setLastSaved(chara);
+          console.log(chara.name + ' saved successfully');
+        });
+      } else {
+        return Promise.resolve();
       }
     },
   }));

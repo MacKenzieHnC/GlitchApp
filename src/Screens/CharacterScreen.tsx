@@ -107,17 +107,17 @@ const CharacterScreen = (_props: any, ref: any) => {
   }));
 
   const save = async () => {
-    try {
-      childRef.current.forEach((child: any) => {
+    Promise.all(
+      childRef.current.map((child: any) => {
         if (child.hasUnsavedChanges()) {
-          child.save();
+          return child.save();
+        } else {
+          return Promise.resolve();
         }
-      });
-    } catch (error) {
-      throw Error('Failed to save characters: ' + error);
-    } finally {
-      Alert.alert('Save successful');
-    }
+      }),
+    )
+      .then(() => Alert.alert('Save successful!'))
+      .catch(err => Alert.alert('Save failed due to ' + err));
   };
 
   // Await load characters
