@@ -2,6 +2,8 @@
     Recursive prop traversals
 */
 
+import {Platform} from 'react-native';
+
 export function getPropFromPath(obj: any, path: string[]) {
   return path.reduce((prev, current) => prev?.[current], obj);
 }
@@ -50,4 +52,8 @@ const recursiveDetectChanges = (init: any, current: any, path: string[]) => {
 */
 export function capitalize(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+export function backslash() {
+  return Platform.OS === 'windows' ? '\\' : '/';
 }
