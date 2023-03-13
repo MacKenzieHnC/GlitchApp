@@ -123,11 +123,7 @@ const CharacterScreen = (props: {gameDir: string}, ref: any) => {
   };
 
   if (!characters) {
-    return (
-      <View>
-        <Text>{props.gameDir}</Text>
-      </View>
-    );
+    return <LoadScreen />;
   }
 
   // Await load characters
