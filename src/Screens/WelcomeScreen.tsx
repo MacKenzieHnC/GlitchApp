@@ -1,11 +1,10 @@
 import React from 'react';
 import {View, Text} from 'react-native';
 import {useTheme} from 'react-native-paper';
-import {getFolderLocation} from '../utils/fileIO';
 import styles from '../utils/styles';
 
 // TODO: Delete this
-export const WelcomeScreen = () => {
+export const WelcomeScreen = ({gameDir}) => {
   const {colors} = useTheme();
   return (
     <View
@@ -18,7 +17,7 @@ export const WelcomeScreen = () => {
         Character Folder Location:{'\t'}
       </Text>
       <Text selectable style={{color: colors.onBackground}}>
-        {getFolderLocation()}
+        {gameDir}
       </Text>
     </View>
   );
