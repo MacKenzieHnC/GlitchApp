@@ -42,6 +42,7 @@ node_modules/**
 !node_modules/**/
 node_modules/react-native
 !node_modules/react-native-document-picker/windows/ReactNativeDocumentPicker/ReactNativeDocumentPicker.csproj
+!node_modules/@mackenziehnc/table/src/**
 npm-debug.log
 yarn-error.log
 
