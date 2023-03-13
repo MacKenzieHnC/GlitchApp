@@ -7,7 +7,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import Character from '../Components/Characters/Character';
 import {getPreferences, preferencesChanged} from '../utils/store/appSlice';
 import {character} from '../utils/types';
-import {capitalize} from '../utils/utils';
+import {backslash, capitalize} from '../utils/utils';
 import styles from '../utils/styles';
 import {getCharacters} from '../utils/fileIO';
 import LoadScreen from './LoadScreen';
@@ -137,7 +137,7 @@ const CharacterScreen = (props: {gameDir: string}, ref: any) => {
           Either copy some .glitch-character files over to
         </Text>
         <Text style={{color: colors.onBackground}} selectable>
-          {props.gameDir}
+          {props.gameDir + backslash() + 'PCs'}
         </Text>
         <Text style={{color: colors.onBackground}}>and hit refresh</Text>
         <Text style={{color: colors.onBackground}}>
