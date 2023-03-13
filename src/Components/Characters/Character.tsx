@@ -33,7 +33,6 @@ const Character = ({initial}: {initial: character}, ref: any) => {
       if (Object.keys(changes).length > 0) {
         return saveCharacter(chara, dir).then(() => {
           setLastSaved(chara);
-          console.log(chara.name + ' saved successfully');
         });
       } else {
         return Promise.resolve();

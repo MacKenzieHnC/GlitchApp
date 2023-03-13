@@ -22,6 +22,7 @@ import {
 } from 'react-native-paper';
 import {
   defaultSettings,
+  gameChanged,
   getMainDir,
   getPreferences,
   mainDirChanged,
@@ -49,6 +50,7 @@ const App = () => {
               Promise.all([
                 dispatch(mainDirChanged(state.mainDir)),
                 dispatch(preferencesChanged(state.preferences)),
+                dispatch(gameChanged(state.game)),
               ]);
             });
         } else {
@@ -58,7 +60,7 @@ const App = () => {
           );
         }
       })
-      .then(() => RNFS.readDir(mainDir).then(results => console.log(results)));
+      .then(() => RNFS.readDir(mainDir));
   }, [dispatch, mainDir]);
   return (
     <PaperProvider theme={preferences.darkMode ? MD3DarkTheme : MD3LightTheme}>

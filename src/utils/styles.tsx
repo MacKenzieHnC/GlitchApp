@@ -66,6 +66,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   screen: {
+    flex: 1,
     alignItems: 'center',
     alignContent: 'center',
     justifyContent: 'center',

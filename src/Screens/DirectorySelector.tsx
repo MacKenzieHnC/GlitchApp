@@ -13,16 +13,12 @@ export const DirectorySelector = () => {
   const dispatch = useDispatch();
 
   const setDirectory = async () => {
-    DocumentPicker.pickDirectory()
-      .then(response => {
-        if (response) {
-          const path = response.uri + backslash() + 'glitch-character-manager';
-          RNFS.mkdir(path)
-            .then(() => dispatch(mainDirChanged(path)))
-            .then(() => console.log('Successfully created ' + path));
-        }
-      })
-      .catch(err => console.log('cancelled: ' + err));
+    DocumentPicker.pickDirectory().then(response => {
+      if (response) {
+        const path = response.uri + backslash() + 'glitch-character-manager';
+        RNFS.mkdir(path).then(() => dispatch(mainDirChanged(path)));
+      }
+    });
   };
 
   return (
@@ -63,8 +59,7 @@ export const NewGame = ({mainDir}: {mainDir: string}) => {
         ),
       )
       .then(() => {
-        console.log('Game path: ' + path);
-        dispatch(gameChanged({name, path}));
+        dispatch(gameChanged(defaultGameSettings));
       });
   };
 

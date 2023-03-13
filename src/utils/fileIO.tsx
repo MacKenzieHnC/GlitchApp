@@ -16,7 +16,6 @@ export const getCharacters = async (pc: boolean, dir: string) => {
 
 export const saveCharacter = async (char: character, dir: string) => {
   const path = dir + backslash() + char.fileName + '.glitch-character';
-  console.log('writing to path: ' + path);
   return RNFS.mkdir(dir)
     .then(() => RNFS.unlink(path))
     .then(() => RNFS.writeFile(path, JSON.stringify(char)));

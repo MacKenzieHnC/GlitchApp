@@ -13,6 +13,7 @@ import Options from '../Components/Options';
 import {useDeferredPromise} from '../utils/DeferredPromise';
 import {getGame, getMainDir} from '../utils/store/appSlice';
 import styles from '../utils/styles';
+import {backslash} from '../utils/utils';
 import CharacterScreen, {CharacterOptions} from './CharacterScreen';
 import {DirectorySelector, NewGame} from './DirectorySelector';
 import {WelcomeScreen} from './WelcomeScreen';
@@ -123,7 +124,6 @@ const Drawer = () => {
 
   return (
     <View style={localStyles.container}>
-      <Text>Game directory: {game.path}</Text>
       <SaveModal />
       <Modal isOpen={optionsOpen} onDismiss={() => setOptionsOpen(false)}>
         <Options>{selectedScreen.options}</Options>
@@ -192,7 +192,7 @@ const Drawer = () => {
             childRef.current = newRef;
             setShowSaveButton(newRef?.save !== undefined);
           }}
-          gameDir={game.path}
+          gameDir={mainDir + backslash() + game.folderName}
         />
       </View>
     </View>

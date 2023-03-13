@@ -10,6 +10,7 @@ import {character} from '../utils/types';
 import {capitalize} from '../utils/utils';
 import styles from '../utils/styles';
 import {getCharacters} from '../utils/fileIO';
+import LoadScreen from './LoadScreen';
 
 export const CharacterOptions = () => {
   const {preferences} = useSelector(getPreferences);
@@ -75,7 +76,7 @@ const CharacterScreen = (props: {gameDir: string}, ref: any) => {
   };
 
   // Load characters
-  const [characters, setCharacters] = useState<character[]>([]);
+  const [characters, setCharacters] = useState<character[]>();
   useEffect(() => {
     loadCharacters();
   });
@@ -120,6 +121,14 @@ const CharacterScreen = (props: {gameDir: string}, ref: any) => {
       .then(() => Alert.alert('Save successful!'))
       .catch(err => Alert.alert('Save failed due to ' + err));
   };
+
+  if (!characters) {
+    return (
+      <View>
+        <Text>{props.gameDir}</Text>
+      </View>
+    );
+  }
 
   // Await load characters
   if (characters.length === 0) {

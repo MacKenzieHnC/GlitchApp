@@ -7,7 +7,7 @@ import {backslash} from '../utils';
 
 interface Game {
   name: string;
-  path: string;
+  folderName: string;
 }
 
 interface StateProps {
@@ -94,10 +94,7 @@ export const settingsFilePath = localStateDir + backslash() + 'settings.json';
 export const saveState = async (
   settings: WritableDraft<StateProps['settings']>,
 ) => {
-  console.log('Saving settings to ' + settingsFilePath);
-  RNFS.writeFile(settingsFilePath, JSON.stringify(settings)).then(() =>
-    console.log('Settings saved!'),
-  );
+  RNFS.writeFile(settingsFilePath, JSON.stringify(settings));
 };
 
 export const {preferencesChanged, mainDirChanged, gameChanged} =
