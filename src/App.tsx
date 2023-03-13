@@ -21,6 +21,8 @@ import {
   MD3LightTheme,
 } from 'react-native-paper';
 import {
+  defaultSettings,
+  getMainDir,
   getPreferences,
   mainDirChanged,
   preferencesChanged,
@@ -28,23 +30,36 @@ import {
 } from './utils/store/appSlice';
 import Drawer from './Screens/Navigator';
 import RNFS from 'react-native-fs';
-import {Alert} from 'react-native';
 
 // My stuff
 
 const App = () => {
   const {preferences} = useSelector(getPreferences);
+  const mainDir = useSelector(getMainDir);
   const dispatch = useDispatch();
   useEffect(() => {
-    RNFS.readFile(settingsFilePath)
-      .then(file => JSON.parse(file))
-      .then(state => {
-        console.log(state);
-        dispatch(mainDirChanged(state.mainDir));
-        dispatch(preferencesChanged(state.preferences));
+    // Load settings
+    RNFS.exists(settingsFilePath)
+      .then(exists => {
+        if (exists) {
+          return RNFS.readFile(settingsFilePath)
+            .then(file => JSON.parse(file))
+            .then(state => {
+              console.log(state);
+              Promise.all([
+                dispatch(mainDirChanged(state.mainDir)),
+                dispatch(preferencesChanged(state.preferences)),
+              ]);
+            });
+        } else {
+          return RNFS.writeFile(
+            settingsFilePath,
+            JSON.stringify(defaultSettings),
+          );
+        }
       })
-      .catch(err => Alert.alert('Load preferences failed:\n' + err));
-  }, [dispatch]);
+      .then(() => RNFS.readDir(mainDir).then(results => console.log(results)));
+  }, [dispatch, mainDir]);
   return (
     <PaperProvider theme={preferences.darkMode ? MD3DarkTheme : MD3LightTheme}>
       <Drawer />

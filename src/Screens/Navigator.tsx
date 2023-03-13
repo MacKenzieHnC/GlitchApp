@@ -7,11 +7,14 @@ import {
   View,
 } from 'react-native';
 import {Button, IconButton, useTheme} from 'react-native-paper';
+import {useSelector} from 'react-redux';
 import Modal from '../Components/Modal';
 import Options from '../Components/Options';
 import {useDeferredPromise} from '../utils/DeferredPromise';
+import {getGame, getMainDir} from '../utils/store/appSlice';
 import styles from '../utils/styles';
 import CharacterScreen, {CharacterOptions} from './CharacterScreen';
+import {DirectorySelector, NewGame} from './DirectorySelector';
 import {WelcomeScreen} from './WelcomeScreen';
 
 interface Screen {
@@ -24,6 +27,8 @@ const Drawer = () => {
   const {colors} = useTheme();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [optionsOpen, setOptionsOpen] = useState(false);
+  const mainDir = useSelector(getMainDir);
+  const game = useSelector(getGame);
 
   const childRef = useRef<any>();
   const screens: Screen[] = [
@@ -108,8 +113,17 @@ const Drawer = () => {
     );
   };
 
+  if (!mainDir) {
+    return <DirectorySelector />;
+  }
+
+  if (!game) {
+    return <NewGame mainDir={mainDir} />;
+  }
+
   return (
     <View style={localStyles.container}>
+      <Text>Game directory: {game.path}</Text>
       <SaveModal />
       <Modal isOpen={optionsOpen} onDismiss={() => setOptionsOpen(false)}>
         <Options>{selectedScreen.options}</Options>
@@ -178,6 +192,7 @@ const Drawer = () => {
             childRef.current = newRef;
             setShowSaveButton(newRef?.save !== undefined);
           }}
+          gameDir={game.path}
         />
       </View>
     </View>

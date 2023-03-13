@@ -2,10 +2,9 @@ import {Table, TD, TR} from '@mackenziehnc/table';
 import React, {forwardRef, useImperativeHandle, useRef} from 'react';
 import {useState, useEffect} from 'react';
 import {Alert, ScrollView, View} from 'react-native';
-import {Text, useTheme, Switch} from 'react-native-paper';
+import {Text, useTheme, Switch, Button} from 'react-native-paper';
 import {useDispatch, useSelector} from 'react-redux';
 import Character from '../Components/Characters/Character';
-import LoadScreen from './LoadScreen';
 import {getPreferences, preferencesChanged} from '../utils/store/appSlice';
 import {character} from '../utils/types';
 import {capitalize} from '../utils/utils';
@@ -67,17 +66,19 @@ export const CharacterOptions = () => {
   );
 };
 
-const CharacterScreen = (_props: any, ref: any) => {
+const CharacterScreen = (props: {gameDir: string}, ref: any) => {
   const {colors} = useTheme();
 
+  const loadCharacters = async () => {
+    var c = await getCharacters(true, props.gameDir);
+    setCharacters(c);
+  };
+
   // Load characters
-  const [characters, setCharacters] = useState<character[]>();
+  const [characters, setCharacters] = useState<character[]>([]);
   useEffect(() => {
-    (async () => {
-      var c = await getCharacters(true);
-      setCharacters(c);
-    })();
-  }, []);
+    loadCharacters();
+  });
   const childRef = useRef<any>([]);
 
   useEffect(() => {
@@ -110,7 +111,7 @@ const CharacterScreen = (_props: any, ref: any) => {
     Promise.all(
       childRef.current.map((child: any) => {
         if (child.hasUnsavedChanges()) {
-          return child.save();
+          return child.save(props.gameDir);
         } else {
           return Promise.resolve();
         }
@@ -121,8 +122,29 @@ const CharacterScreen = (_props: any, ref: any) => {
   };
 
   // Await load characters
-  if (!characters) {
-    return <LoadScreen />;
+  if (characters.length === 0) {
+    return (
+      <View style={{...styles.screen, backgroundColor: colors.background}}>
+        <Text style={{color: colors.onBackground}}>
+          Looks like you don't have any characters yet. That's okay!
+        </Text>
+        <Text style={{color: colors.onBackground}}>
+          Either copy some .glitch-character files over to
+        </Text>
+        <Text style={{color: colors.onBackground}} selectable>
+          {props.gameDir}
+        </Text>
+        <Text style={{color: colors.onBackground}}>and hit refresh</Text>
+        <Text style={{color: colors.onBackground}}>
+          or head on over to Character Creation to get started!
+        </Text>
+        <Button
+          style={{backgroundColor: colors.primaryContainer}}
+          onPress={loadCharacters}>
+          <Text style={{color: colors.onPrimary}}>Refresh</Text>
+        </Button>
+      </View>
+    );
   }
 
   // Component
