@@ -39,8 +39,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignContent: 'center',
     justifyContent: 'center',
-    flex: 1,
-    flexBasis: 0,
+    flexShrink: 1,
+    flexBasis: 200,
   },
   listItem: {
     padding: 5,
