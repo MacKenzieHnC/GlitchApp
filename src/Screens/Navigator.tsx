@@ -200,9 +200,12 @@ const Drawer = () => {
 };
 
 const localStyles = StyleSheet.create({
-  container: {flex: 1},
+  container: {height: '100%'},
   buttonText: {fontSize: 20, textAlignVertical: 'center', paddingHorizontal: 5},
-  drawer: {flexDirection: 'row'},
+  drawer: {
+    flexDirection: 'row',
+    flex: 1,
+  },
   row: {flexDirection: 'row', alignItems: 'center'},
   scrollView: {flexGrow: 0},
 });

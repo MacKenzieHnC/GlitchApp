@@ -66,16 +66,15 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   screen: {
-    flex: 1,
     alignItems: 'center',
     alignContent: 'center',
     justifyContent: 'center',
     width: '100%',
+    height: '100%',
   },
   scrollview: {
     flexGrow: 1,
     width: '100%',
-    paddingBottom: 200, // TODO: Remove once you fix Tables
   },
   switch: {
     marginRight: -7,
