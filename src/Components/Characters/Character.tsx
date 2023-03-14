@@ -24,15 +24,18 @@ const Character = ({initial}: {initial: character}, ref: any) => {
     hasUnsavedChanges: () => {
       return CharacterChanges({initial: lastSaved, current: chara});
     },
-    save: () => {
+    save: (dir: string) => {
       const changes: any = {};
       detectChanges(lastSaved, chara).forEach(change => {
         const key = change[change.length - 1];
         changes[key] = getPropFromPath(chara, change);
       });
       if (Object.keys(changes).length > 0) {
-        saveCharacter(chara);
-        setLastSaved(chara);
+        return saveCharacter(chara, dir).then(() => {
+          setLastSaved(chara);
+        });
+      } else {
+        return Promise.resolve();
       }
     },
   }));
